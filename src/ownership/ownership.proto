@@ -5,7 +5,7 @@ package ownership;
 import "users/users.proto";
 import "groups/groups.proto";
 
-message Ownership {
+message Owner {
     oneof owner {
         users.User user = 1;
         groups.Group group = 2;

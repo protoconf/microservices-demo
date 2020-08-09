@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package groups;
 
-import "groups/groups.proto";
+import "users/users.proto";
 
 message Group {
     string name = 1;

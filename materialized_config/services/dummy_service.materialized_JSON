@@ -1,0 +1,24 @@
+{
+  "protoFile": "services/services.proto",
+  "value": {
+    "@type": "type.googleapis.com/services.Service",
+    "name": "dummy",
+    "owner": {
+      "group": {
+        "name": "dummy",
+        "oncall": "dummy",
+        "slackChannel": "#dummy-group"
+      }
+    },
+    "slos": [
+      {
+        "errorRate": {
+          "meta": {
+            "name": "dummy_error_rate",
+            "below": 0.01
+          }
+        }
+      }
+    ]
+  }
+}

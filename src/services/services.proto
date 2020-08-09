@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+package services;
 import "ownership/ownership.proto";
 
 message Service {
@@ -7,7 +8,7 @@ message Service {
     ownership.Owner owner = 2;
     repeated SLO slos = 3;
     repeated Service downstreams = 4;
-    
+
     message SLO {
         oneof slo {
             ErrorRateSLO error_rate = 1;
@@ -18,8 +19,8 @@ message Service {
         message SLOMeta {
             string name = 1;
             oneof target {
-                float64 above = 1;
-                float64 below = 2;
+                float above = 2;
+                float below = 3;
             }
         }
 

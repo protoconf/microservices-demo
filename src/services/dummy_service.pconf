@@ -1,17 +1,17 @@
 load("//services/services.proto", "Service")
+load("//ownership/ownership.proto", "Owner")
 load("//groups/dummy_group.pinc", "DUMMY_GROUP")
-
 
 def main():
     return Service(
         name="dummy",
-        owner=DUMMY_GROUP,
+        owner=Owner(group=DUMMY_GROUP),
         slos=[
             Service.SLO(
-                error_rate=Service.SLO.ErroRateSLO(
-                    meta=Service.SLO.MetaSLO(
+                error_rate=Service.SLO.ErrorRateSLO(
+                    meta=Service.SLO.SLOMeta(
                         name="dummy_error_rate",
-                        below=0.01
+                        below=0.01,
                     )
                 )
             )
