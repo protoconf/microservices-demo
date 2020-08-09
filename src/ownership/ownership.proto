@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ownership;
+
+import "users/users.proto";
+import "groups/groups.proto";
+
+message Ownership {
+    oneof owner {
+        users.User user = 1;
+        groups.Group group = 2;
+    }
+}

@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package terraform;
+
+import "terraform/gsuite-data.proto";
+
+import "terraform/gsuite-resources.proto";
+
+message Terraform {
+  Resources resource = 1;
+
+  Datasources data = 2;
+
+  message Resources {
+    map<string, gsuite.resources.GsuiteDomain> gsuite_domain = 1 [json_name = "gsuite_domain"];
+
+    map<string, gsuite.resources.GsuiteGroup> gsuite_group = 2 [json_name = "gsuite_group"];
+
+    map<string, gsuite.resources.GsuiteGroupMember> gsuite_group_member = 3 [json_name = "gsuite_group_member"];
+
+    map<string, gsuite.resources.GsuiteGroupMembers> gsuite_group_members = 4 [json_name = "gsuite_group_members"];
+
+    map<string, gsuite.resources.GsuiteGroupSettings> gsuite_group_settings = 5 [json_name = "gsuite_group_settings"];
+
+    map<string, gsuite.resources.GsuiteUser> gsuite_user = 6 [json_name = "gsuite_user"];
+
+    map<string, gsuite.resources.GsuiteUserAttributes> gsuite_user_attributes = 7 [json_name = "gsuite_user_attributes"];
+
+    map<string, gsuite.resources.GsuiteUserSchema> gsuite_user_schema = 8 [json_name = "gsuite_user_schema"];
+  }
+
+  message Datasources {
+    map<string, gsuite.data.GsuiteGroup> gsuite_group = 1 [json_name = "gsuite_group"];
+
+    map<string, gsuite.data.GsuiteGroupSettings> gsuite_group_settings = 2 [json_name = "gsuite_group_settings"];
+
+    map<string, gsuite.data.GsuiteUser> gsuite_user = 3 [json_name = "gsuite_user"];
+
+    map<string, gsuite.data.GsuiteUserAttributes> gsuite_user_attributes = 4 [json_name = "gsuite_user_attributes"];
+  }
+}

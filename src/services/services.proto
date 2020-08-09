@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "ownership/ownership.proto";
+
+message Service {
+    string name = 1;
+    ownership.Owner owner = 2;
+    repeated SLO slos = 3;
+    repeated Service downstreams = 4;
+    
+    message SLO {
+        oneof slo {
+            ErrorRateSLO error_rate = 1;
+            LatencySLO latency = 2;
+            SaturationSLO saturation = 3;
+            TroughputSLO troughput = 4;
+        }
+        message SLOMeta {
+            string name = 1;
+            oneof target {
+                float64 above = 1;
+                float64 below = 2;
+            }
+        }
+
+        message ErrorRateSLO {
+            SLOMeta meta = 1;
+        }
+
+        message LatencySLO {
+            SLOMeta meta = 1;
+        }
+
+        message SaturationSLO {
+            SLOMeta meta = 1;
+        }
+
+        message TroughputSLO {
+            SLOMeta meta = 1;
+        }
+    }
+}

@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package users;
+
+import "terraform/gsuite-resources.proto";
+
+message User {
+    terraform.gsuite.resources.GsuiteUser user = 1;
+}

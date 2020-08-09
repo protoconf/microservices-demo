@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package groups;
+
+import "groups/groups.proto";
+
+message Group {
+    string name = 1;
+    string oncall = 2;
+    string slack_channel = 3;
+    repeated users.User members = 4; 
+    repeated Group subgroups = 5;
+}

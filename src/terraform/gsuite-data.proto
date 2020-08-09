@@ -1,0 +1,486 @@
+syntax = "proto3";
+
+package terraform.gsuite.data;
+
+import "terraform/meta.proto";
+
+//GsuiteGroup version is 0
+message GsuiteGroup {
+  bool admin_created = 1 [json_name = "admin_created"];
+
+  repeated string aliases = 2;
+
+  string description = 3;
+
+  int64 direct_members_count = 4 [json_name = "direct_members_count"];
+
+  string email = 5;
+
+  string id = 6;
+
+  repeated Member member = 7;
+
+  string name = 8;
+
+  repeated string non_editable_aliases = 9 [json_name = "non_editable_aliases"];
+
+  terraform.meta.MetaFields.DependsOnEntry depends_on = 10;
+
+  int32 count = 11;
+
+  terraform.meta.MetaFields.ForEachEntry for_each = 12;
+
+  string provider = 13;
+
+  terraform.meta.Lifecycle lifecycle = 14;
+
+  message Member {
+    //email: string
+    string email = 1;
+
+    //etag: string
+    string etag = 2;
+
+    //kind: string
+    string kind = 3;
+
+    //role: string
+    string role = 4;
+
+    //status: string
+    string status = 5;
+
+    //type: string
+    string type = 6;
+  }
+}
+
+//GsuiteGroupSettings version is 0
+message GsuiteGroupSettings {
+  string allow_external_members = 1 [json_name = "allow_external_members"];
+
+  string allow_google_communication = 2 [json_name = "allow_google_communication"];
+
+  string allow_web_posting = 3 [json_name = "allow_web_posting"];
+
+  string archive_only = 4 [json_name = "archive_only"];
+
+  string custom_footer_text = 5 [json_name = "custom_footer_text"];
+
+  string custom_reply_to = 6 [json_name = "custom_reply_to"];
+
+  string description = 7;
+
+  string email = 8;
+
+  string favorite_replies_on_top = 9 [json_name = "favorite_replies_on_top"];
+
+  string id = 10;
+
+  string include_custom_footer = 11 [json_name = "include_custom_footer"];
+
+  string include_in_global_address_list = 12 [json_name = "include_in_global_address_list"];
+
+  string is_archived = 13 [json_name = "is_archived"];
+
+  string kind = 14;
+
+  int64 max_message_bytes = 15 [json_name = "max_message_bytes"];
+
+  string members_can_post_as_the_group = 16 [json_name = "members_can_post_as_the_group"];
+
+  string message_display_font = 17 [json_name = "message_display_font"];
+
+  string message_moderation_level = 18 [json_name = "message_moderation_level"];
+
+  string name = 19;
+
+  string primary_language = 20 [json_name = "primary_language"];
+
+  string reply_to = 21 [json_name = "reply_to"];
+
+  string send_message_deny_notification = 22 [json_name = "send_message_deny_notification"];
+
+  string show_in_group_directory = 23 [json_name = "show_in_group_directory"];
+
+  string spam_moderation_level = 24 [json_name = "spam_moderation_level"];
+
+  string who_can_add = 25 [json_name = "who_can_add"];
+
+  string who_can_add_references = 26 [json_name = "who_can_add_references"];
+
+  string who_can_approve_members = 27 [json_name = "who_can_approve_members"];
+
+  string who_can_approve_messages = 28 [json_name = "who_can_approve_messages"];
+
+  string who_can_assign_topics = 29 [json_name = "who_can_assign_topics"];
+
+  string who_can_assist_content = 30 [json_name = "who_can_assist_content"];
+
+  string who_can_ban_users = 31 [json_name = "who_can_ban_users"];
+
+  string who_can_contact_owner = 32 [json_name = "who_can_contact_owner"];
+
+  string who_can_delete_any_post = 33 [json_name = "who_can_delete_any_post"];
+
+  string who_can_delete_topics = 34 [json_name = "who_can_delete_topics"];
+
+  string who_can_discover_group = 35 [json_name = "who_can_discover_group"];
+
+  string who_can_enter_free_form_tags = 36 [json_name = "who_can_enter_free_form_tags"];
+
+  string who_can_hide_abuse = 37 [json_name = "who_can_hide_abuse"];
+
+  string who_can_invite = 38 [json_name = "who_can_invite"];
+
+  string who_can_join = 39 [json_name = "who_can_join"];
+
+  string who_can_leave_group = 40 [json_name = "who_can_leave_group"];
+
+  string who_can_lock_topics = 41 [json_name = "who_can_lock_topics"];
+
+  string who_can_make_topics_sticky = 42 [json_name = "who_can_make_topics_sticky"];
+
+  string who_can_mark_duplicate = 43 [json_name = "who_can_mark_duplicate"];
+
+  string who_can_mark_favorite_reply_on_any_topic = 44 [json_name = "who_can_mark_favorite_reply_on_any_topic"];
+
+  string who_can_mark_favorite_reply_on_own_topic = 45 [json_name = "who_can_mark_favorite_reply_on_own_topic"];
+
+  string who_can_mark_no_response_needed = 46 [json_name = "who_can_mark_no_response_needed"];
+
+  string who_can_moderate_content = 47 [json_name = "who_can_moderate_content"];
+
+  string who_can_moderate_members = 48 [json_name = "who_can_moderate_members"];
+
+  string who_can_modify_members = 49 [json_name = "who_can_modify_members"];
+
+  string who_can_modify_tags_and_categories = 50 [json_name = "who_can_modify_tags_and_categories"];
+
+  string who_can_move_topics_in = 51 [json_name = "who_can_move_topics_in"];
+
+  string who_can_move_topics_out = 52 [json_name = "who_can_move_topics_out"];
+
+  string who_can_post_announcements = 53 [json_name = "who_can_post_announcements"];
+
+  string who_can_post_message = 54 [json_name = "who_can_post_message"];
+
+  string who_can_take_topics = 55 [json_name = "who_can_take_topics"];
+
+  string who_can_unassign_topic = 56 [json_name = "who_can_unassign_topic"];
+
+  string who_can_unmark_favorite_reply_on_any_topic = 57 [json_name = "who_can_unmark_favorite_reply_on_any_topic"];
+
+  string who_can_view_group = 58 [json_name = "who_can_view_group"];
+
+  string who_can_view_membership = 59 [json_name = "who_can_view_membership"];
+
+  terraform.meta.MetaFields.DependsOnEntry depends_on = 60;
+
+  int32 count = 61;
+
+  terraform.meta.MetaFields.ForEachEntry for_each = 62;
+
+  string provider = 63;
+
+  terraform.meta.Lifecycle lifecycle = 64;
+}
+
+//GsuiteUser version is 0
+message GsuiteUser {
+  bool _2s_enforced = 1 [json_name = "2s_enforced"];
+
+  bool _2s_enrolled = 2 [json_name = "2s_enrolled"];
+
+  string agreed_to_terms = 3 [json_name = "agreed_to_terms"];
+
+  repeated string aliases = 4;
+
+  bool change_password_next_login = 5 [json_name = "change_password_next_login"];
+
+  string creation_time = 6 [json_name = "creation_time"];
+
+  repeated CustomSchema custom_schema = 7 [json_name = "custom_schema"];
+
+  string customer_id = 8 [json_name = "customer_id"];
+
+  string deletion_time = 9 [json_name = "deletion_time"];
+
+  string etag = 10;
+
+  repeated ExternalIds external_ids = 11 [json_name = "external_ids"];
+
+  string hash_function = 12 [json_name = "hash_function"];
+
+  string id = 13;
+
+  bool include_in_global_list = 14 [json_name = "include_in_global_list"];
+
+  bool is_admin = 15 [json_name = "is_admin"];
+
+  bool is_delegated_admin = 16 [json_name = "is_delegated_admin"];
+
+  bool is_ip_whitelisted = 17 [json_name = "is_ip_whitelisted"];
+
+  bool is_mailbox_setup = 18 [json_name = "is_mailbox_setup"];
+
+  bool is_suspended = 19 [json_name = "is_suspended"];
+
+  string last_login_time = 20 [json_name = "last_login_time"];
+
+  map<string, string> name = 21;
+
+  string org_unit_path = 22 [json_name = "org_unit_path"];
+
+  repeated Organizations organizations = 23;
+
+  string password = 24;
+
+  repeated PosixAccounts posix_accounts = 25 [json_name = "posix_accounts"];
+
+  string primary_email = 26 [json_name = "primary_email"];
+
+  string recovery_email = 27 [json_name = "recovery_email"];
+
+  string recovery_phone = 28 [json_name = "recovery_phone"];
+
+  repeated SshPublicKeys ssh_public_keys = 29 [json_name = "ssh_public_keys"];
+
+  string suspension_reason = 30 [json_name = "suspension_reason"];
+
+  terraform.meta.MetaFields.DependsOnEntry depends_on = 31;
+
+  int32 count = 32;
+
+  terraform.meta.MetaFields.ForEachEntry for_each = 33;
+
+  string provider = 34;
+
+  terraform.meta.Lifecycle lifecycle = 35;
+
+  message CustomSchema {
+    //name: string
+    string name = 1;
+
+    //value: string
+    string value = 2;
+  }
+
+  message ExternalIds {
+    //custom_type: string
+    string custom_type = 1 [json_name = "custom_type"];
+
+    //type: string
+    string type = 2;
+
+    //value: string
+    string value = 3;
+  }
+
+  message Organizations {
+    //cost_center: string
+    string cost_center = 1 [json_name = "cost_center"];
+
+    //custom_type: string
+    string custom_type = 2 [json_name = "custom_type"];
+
+    //department: string
+    string department = 3;
+
+    //description: string
+    string description = 4;
+
+    //domain: string
+    string domain = 5;
+
+    //full_time_equivalent: number
+    int64 full_time_equivalent = 6 [json_name = "full_time_equivalent"];
+
+    //location: string
+    string location = 7;
+
+    //name: string
+    string name = 8;
+
+    //primary: bool
+    bool primary = 9;
+
+    //symbol: string
+    string symbol = 10;
+
+    //title: string
+    string title = 11;
+
+    //type: string
+    string type = 12;
+  }
+
+  message PosixAccounts {
+    //account_id: string
+    string account_id = 1 [json_name = "account_id"];
+
+    //gecos: string
+    string gecos = 2;
+
+    //gid: number
+    int64 gid = 3;
+
+    //home_directory: string
+    string home_directory = 4 [json_name = "home_directory"];
+
+    //primary: bool
+    bool primary = 5;
+
+    //shell: string
+    string shell = 6;
+
+    //system_id: string
+    string system_id = 7 [json_name = "system_id"];
+
+    //uid: number
+    int64 uid = 8;
+
+    //username: string
+    string username = 9;
+  }
+
+  message SshPublicKeys {
+    //expiration_time_usec: number
+    int64 expiration_time_usec = 1 [json_name = "expiration_time_usec"];
+
+    //fingerprint: string
+    string fingerprint = 2;
+
+    //key: string
+    string key = 3;
+  }
+}
+
+//GsuiteUserAttributes version is 0
+message GsuiteUserAttributes {
+  string id = 1;
+
+  string json = 2;
+
+  Emails emails = 3;
+
+  Bool bool = 4;
+
+  Dates dates = 5;
+
+  Doubles doubles = 6;
+
+  Phones phones = 7;
+
+  Strings strings = 8;
+
+  Integer integer = 9;
+
+  Phone phone = 10;
+
+  Email email = 11;
+
+  Integers integers = 12;
+
+  String string = 13;
+
+  Bools bools = 14;
+
+  Date date = 15;
+
+  Double double = 16;
+
+  terraform.meta.MetaFields.DependsOnEntry depends_on = 17;
+
+  int32 count = 18;
+
+  terraform.meta.MetaFields.ForEachEntry for_each = 19;
+
+  string provider = 20;
+
+  terraform.meta.Lifecycle lifecycle = 21;
+
+  message Emails {
+    string name = 1;
+
+    repeated string value = 2;
+  }
+
+  message Bool {
+    string name = 1;
+
+    bool value = 2;
+  }
+
+  message Dates {
+    string name = 1;
+
+    repeated string value = 2;
+  }
+
+  message Doubles {
+    string name = 1;
+
+    repeated int64 value = 2;
+  }
+
+  message Phones {
+    string name = 1;
+
+    repeated string value = 2;
+  }
+
+  message Strings {
+    string name = 1;
+
+    repeated string value = 2;
+  }
+
+  message Integer {
+    string name = 1;
+
+    int64 value = 2;
+  }
+
+  message Phone {
+    string name = 1;
+
+    string value = 2;
+  }
+
+  message Email {
+    string name = 1;
+
+    string value = 2;
+  }
+
+  message Integers {
+    string name = 1;
+
+    repeated int64 value = 2;
+  }
+
+  message String {
+    string name = 1;
+
+    string value = 2;
+  }
+
+  message Bools {
+    string name = 1;
+
+    repeated bool value = 2;
+  }
+
+  message Date {
+    string name = 1;
+
+    string value = 2;
+  }
+
+  message Double {
+    string name = 1;
+
+    int64 value = 2;
+  }
+}
