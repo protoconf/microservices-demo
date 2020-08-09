@@ -1,7 +1,3 @@
 load("//groups/groups.proto", "Group")
 
-DUMMY_GROUP = Group(
-    name="dummy",
-    oncall="dummy",
-    slack_channel="#dummy-group",
-)
+DUMMY_GROUP = Group(name="dummy", oncall="dummy", slack_channel="#dummy-group",)

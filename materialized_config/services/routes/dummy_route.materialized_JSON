@@ -1,0 +1,48 @@
+{
+  "protoFile": "envoy/config/bootstrap/v2/bootstrap.proto",
+  "value": {
+    "@type": "type.googleapis.com/envoy.config.bootstrap.v2.Bootstrap",
+    "staticResources": {
+      "listeners": [
+        {
+          "name": "listener_0",
+          "filterChains": [
+            {
+              "filters": [
+                {
+                  "typedConfig": {
+                    "@type": "type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager",
+                    "routeConfig": {
+                      "name": "dummy_route",
+                      "virtualHosts": [
+                        {
+                          "name": "dummy_service",
+                          "domains": [
+                            "*"
+                          ],
+                          "routes": [
+                            {
+                              "match": {
+                                "prefix": "/"
+                              },
+                              "route": {
+                                "cluster": "google_service",
+                                "hostRewrite": "www.google.com"
+                              },
+                              "name": "dummy_route"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    "statPrefix": "dummy_service"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
