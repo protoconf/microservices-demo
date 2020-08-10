@@ -1,0 +1,216 @@
+{
+  "protoFile": "services/services.proto",
+  "value": {
+    "@type": "type.googleapis.com/services.Service",
+    "description": "\n    Retrieves user cart, prepares order and orchestrates the payment, shipping and the email notification.\n    ",
+    "downstreams": [
+      {
+        "name": "CartService",
+        "description": "\n    Stores the items in the user's shopping cart in Redis and retrieves it.\n    ",
+        "owner": {
+          "group": {
+            "name": "dummy",
+            "oncall": "dummy",
+            "slackChannel": "#dummy-group"
+          }
+        },
+        "slos": [
+          {
+            "errorRate": {
+              "meta": {
+                "name": "dummy_error_rate",
+                "below": 0.01
+              }
+            }
+          }
+        ],
+        "versions": [
+          {
+            "version": {
+              "major": 1,
+              "minor": 12
+            },
+            "weight": 90
+          }
+        ]
+      },
+      {
+        "name": "CurrencyService",
+        "description": "\n    Converts one money amount to another currency. Uses real values fetched from European Central Bank. It's the highest QPS service.\n    ",
+        "owner": {
+          "group": {
+            "name": "dummy",
+            "oncall": "dummy",
+            "slackChannel": "#dummy-group"
+          }
+        },
+        "slos": [
+          {
+            "errorRate": {
+              "meta": {
+                "name": "dummy_error_rate",
+                "below": 0.01
+              }
+            }
+          }
+        ],
+        "versions": [
+          {
+            "version": {
+              "major": 1,
+              "minor": 12
+            },
+            "weight": 90
+          }
+        ]
+      },
+      {
+        "name": "EmailService",
+        "description": "\n    Sends users an order confirmation email (mock).\n    ",
+        "owner": {
+          "group": {
+            "name": "dummy",
+            "oncall": "dummy",
+            "slackChannel": "#dummy-group"
+          }
+        },
+        "slos": [
+          {
+            "errorRate": {
+              "meta": {
+                "name": "dummy_error_rate",
+                "below": 0.01
+              }
+            }
+          }
+        ],
+        "versions": [
+          {
+            "version": {
+              "major": 1,
+              "minor": 12
+            },
+            "weight": 90
+          }
+        ]
+      },
+      {
+        "name": "PaymentService",
+        "description": "\n    Charges the given credit card info (mock) with the given amount and returns a transaction ID.\n    ",
+        "owner": {
+          "group": {
+            "name": "dummy",
+            "oncall": "dummy",
+            "slackChannel": "#dummy-group"
+          }
+        },
+        "slos": [
+          {
+            "errorRate": {
+              "meta": {
+                "name": "dummy_error_rate",
+                "below": 0.01
+              }
+            }
+          }
+        ],
+        "versions": [
+          {
+            "version": {
+              "major": 1,
+              "minor": 12
+            },
+            "weight": 90
+          }
+        ]
+      },
+      {
+        "name": "ProductCatalogService",
+        "description": "\n    Provides the list of products from a JSON file and ability to search products and get individual products.\n    ",
+        "owner": {
+          "group": {
+            "name": "dummy",
+            "oncall": "dummy",
+            "slackChannel": "#dummy-group"
+          }
+        },
+        "slos": [
+          {
+            "errorRate": {
+              "meta": {
+                "name": "dummy_error_rate",
+                "below": 0.01
+              }
+            }
+          }
+        ],
+        "versions": [
+          {
+            "version": {
+              "major": 1,
+              "minor": 12
+            },
+            "weight": 90
+          }
+        ]
+      },
+      {
+        "name": "ShippingService",
+        "description": "\n    Gives shipping cost estimates based on the shopping cart. Ships items to the given address (mock)\n    ",
+        "owner": {
+          "group": {
+            "name": "dummy",
+            "oncall": "dummy",
+            "slackChannel": "#dummy-group"
+          }
+        },
+        "slos": [
+          {
+            "errorRate": {
+              "meta": {
+                "name": "dummy_error_rate",
+                "below": 0.01
+              }
+            }
+          }
+        ],
+        "versions": [
+          {
+            "version": {
+              "major": 1,
+              "minor": 12
+            },
+            "weight": 90
+          }
+        ]
+      }
+    ],
+    "name": "CheckoutService",
+    "owner": {
+      "group": {
+        "name": "dummy",
+        "oncall": "dummy",
+        "slackChannel": "#dummy-group"
+      }
+    },
+    "slos": [
+      {
+        "errorRate": {
+          "meta": {
+            "name": "dummy_error_rate",
+            "below": 0.01
+          }
+        }
+      }
+    ],
+    "versions": [
+      {
+        "version": {
+          "major": 1,
+          "minor": 12
+        },
+        "weight": 90
+      }
+    ]
+  }
+}

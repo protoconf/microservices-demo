@@ -16,7 +16,7 @@
                       "name": "dummy_route",
                       "virtualHosts": [
                         {
-                          "name": "dummy_service",
+                          "name": "ProductCatalogService",
                           "domains": [
                             "*"
                           ],
@@ -29,7 +29,7 @@
                                 "cluster": "google_service",
                                 "hostRewrite": "www.google.com"
                               },
-                              "name": "dummy_route"
+                              "name": "ProductCatalogService"
                             }
                           ]
                         }

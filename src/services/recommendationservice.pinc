@@ -1,0 +1,23 @@
+load("//services/services.proto", "Service", "Version")
+load("//ownership/ownership.proto", "Owner")
+load("//groups/dummy_group.pinc", "DUMMY_GROUP")
+
+load("//services/productcatalogservice.pinc", "PRODUCT_CATALOG_SERVICE")
+
+
+RECOMMENDATION_SERVICE = Service(
+    name="RecommendationService",
+    description="""
+    Recommends other products based on what's given in the cart.
+    """,
+    owner=Owner(group=DUMMY_GROUP),
+    versions=[Service.WeightedVersion(version=Version(major=1, minor=12), weight=90)],
+    downstreams=[PRODUCT_CATALOG_SERVICE],
+    slos=[
+        Service.SLO(
+            error_rate=Service.SLO.ErrorRateSLO(
+                meta=Service.SLO.SLOMeta(name="dummy_error_rate", below=0.01,)
+            )
+        )
+    ],
+)

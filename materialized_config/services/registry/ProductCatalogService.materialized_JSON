@@ -2,7 +2,8 @@
   "protoFile": "services/services.proto",
   "value": {
     "@type": "type.googleapis.com/services.Service",
-    "name": "dummy",
+    "description": "\n    Provides the list of products from a JSON file and ability to search products and get individual products.\n    ",
+    "name": "ProductCatalogService",
     "owner": {
       "group": {
         "name": "dummy",
@@ -18,6 +19,15 @@
             "below": 0.01
           }
         }
+      }
+    ],
+    "versions": [
+      {
+        "version": {
+          "major": 1,
+          "minor": 12
+        },
+        "weight": 90
       }
     ]
   }

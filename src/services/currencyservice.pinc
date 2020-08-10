@@ -1,0 +1,20 @@
+load("//services/services.proto", "Service", "Version")
+load("//ownership/ownership.proto", "Owner")
+load("//groups/dummy_group.pinc", "DUMMY_GROUP")
+
+
+CURRENCY_SERVICE = Service(
+    name="CurrencyService",
+    description="""
+    Converts one money amount to another currency. Uses real values fetched from European Central Bank. It's the highest QPS service.
+    """,
+    owner=Owner(group=DUMMY_GROUP),
+    versions=[Service.WeightedVersion(version=Version(major=1, minor=12), weight=90)],
+    slos=[
+        Service.SLO(
+            error_rate=Service.SLO.ErrorRateSLO(
+                meta=Service.SLO.SLOMeta(name="dummy_error_rate", below=0.01,)
+            )
+        )
+    ],
+)

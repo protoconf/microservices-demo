@@ -1,0 +1,34 @@
+{
+  "protoFile": "services/services.proto",
+  "value": {
+    "@type": "type.googleapis.com/services.Service",
+    "description": "\n    Stores the items in the user's shopping cart in Redis and retrieves it.\n    ",
+    "name": "CartService",
+    "owner": {
+      "group": {
+        "name": "dummy",
+        "oncall": "dummy",
+        "slackChannel": "#dummy-group"
+      }
+    },
+    "slos": [
+      {
+        "errorRate": {
+          "meta": {
+            "name": "dummy_error_rate",
+            "below": 0.01
+          }
+        }
+      }
+    ],
+    "versions": [
+      {
+        "version": {
+          "major": 1,
+          "minor": 12
+        },
+        "weight": 90
+      }
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "protoFile": "services/services.proto",
+  "value": {
+    "@type": "type.googleapis.com/services.Service",
+    "description": "\n    Charges the given credit card info (mock) with the given amount and returns a transaction ID.\n    ",
+    "name": "PaymentService",
+    "owner": {
+      "group": {
+        "name": "dummy",
+        "oncall": "dummy",
+        "slackChannel": "#dummy-group"
+      }
+    },
+    "slos": [
+      {
+        "errorRate": {
+          "meta": {
+            "name": "dummy_error_rate",
+            "below": 0.01
+          }
+        }
+      }
+    ],
+    "versions": [
+      {
+        "version": {
+          "major": 1,
+          "minor": 12
+        },
+        "weight": 90
+      }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+load("//services/services.proto", "Service", "Version")
+load("//ownership/ownership.proto", "Owner")
+load("//groups/dummy_group.pinc", "DUMMY_GROUP")
+
+
+PRODUCT_CATALOG_SERVICE = Service(
+    name="ProductCatalogService",
+    description="""
+    Provides the list of products from a JSON file and ability to search products and get individual products.
+    """,
+    owner=Owner(group=DUMMY_GROUP),
+    versions=[Service.WeightedVersion(version=Version(major=1, minor=12), weight=90)],
+    slos=[
+        Service.SLO(
+            error_rate=Service.SLO.ErrorRateSLO(
+                meta=Service.SLO.SLOMeta(name="dummy_error_rate", below=0.01,)
+            )
+        )
+    ],
+)

@@ -1,0 +1,35 @@
+load("//services/services.proto", "Service", "Version")
+load("//ownership/ownership.proto", "Owner")
+load("//groups/dummy_group.pinc", "DUMMY_GROUP")
+
+load("//services/cartservice.pinc", "CART_SERVICE")
+load("//services/currencyservice.pinc", "CURRENCY_SERVICE")
+load("//services/emailservice.pinc", "EMAIL_SERVICE")
+load("//services/paymentservice.pinc", "PAYMENT_SERVICE")
+load("//services/productcatalogservice.pinc", "PRODUCT_CATALOG_SERVICE")
+load("//services/shippingservice.pinc", "SHIPPING_SERVICE")
+
+
+CHECKOUT_SERVICE = Service(
+    name="CheckoutService",
+    description="""
+    Retrieves user cart, prepares order and orchestrates the payment, shipping and the email notification.
+    """,
+    owner=Owner(group=DUMMY_GROUP),
+    versions=[Service.WeightedVersion(version=Version(major=1, minor=12), weight=90)],
+    downstreams=[
+        CART_SERVICE,
+        CURRENCY_SERVICE,
+        EMAIL_SERVICE,
+        PAYMENT_SERVICE,
+        PRODUCT_CATALOG_SERVICE,
+        SHIPPING_SERVICE,
+    ],
+    slos=[
+        Service.SLO(
+            error_rate=Service.SLO.ErrorRateSLO(
+                meta=Service.SLO.SLOMeta(name="dummy_error_rate", below=0.01,)
+            )
+        )
+    ],
+)

@@ -1,0 +1,33 @@
+load("//services/services.proto", "ServiceRegistry")
+
+load("//services/frontend.pinc", "FRONTEND")
+load("//services/adservice.pinc", "AD_SERVICE")
+load("//services/cartservice.pinc", "CART_SERVICE")
+load("//services/checkoutservice.pinc", "CHECKOUT_SERVICE")
+load("//services/currencyservice.pinc", "CURRENCY_SERVICE")
+load("//services/paymentservice.pinc", "PAYMENT_SERVICE")
+load("//services/productcatalogservice.pinc", "PRODUCT_CATALOG_SERVICE")
+load("//services/recommendationservice.pinc", "RECOMMENDATION_SERVICE")
+load("//services/shippingservice.pinc", "SHIPPING_SERVICE")
+
+reg = ServiceRegistry(
+    services=[
+        FRONTEND,
+        AD_SERVICE,
+        CART_SERVICE,
+        CHECKOUT_SERVICE,
+        CURRENCY_SERVICE,
+        PAYMENT_SERVICE,
+        PRODUCT_CATALOG_SERVICE,
+        RECOMMENDATION_SERVICE,
+        SHIPPING_SERVICE,
+    ]
+)
+
+
+def GetServiceByName(name):
+    return [svc for svc in reg.services if svc.name == name][0]
+
+
+def GetServicesForOwner(owner):
+    return [svc for svc in reg.services if svc.owner == owner]
