@@ -1,0 +1,36 @@
+{
+  "protoFile": "executor/exec_config.proto",
+  "value": {
+    "@type": "type.googleapis.com/exec_config.Config",
+    "items": [
+      {
+        "path": "services/routes/result/RecommendationService",
+        "protoFile": "envoy/config/bootstrap/v2/bootstrap.proto",
+        "actions": [
+          {
+            "file": {
+              "path": "/tmp/RecommendationService.json",
+              "serializer": "JSON"
+            },
+            "then": [
+              {
+                "file": {
+                  "path": "/tmp/RecommendationService.pb",
+                  "serializer": "PB"
+                }
+              }
+            ],
+            "onError": [
+              {
+                "file": {
+                  "path": "/tmp/RecommendationService.yaml",
+                  "serializer": "YAML"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

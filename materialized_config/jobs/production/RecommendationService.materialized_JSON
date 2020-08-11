@@ -4,8 +4,8 @@
     "@type": "type.googleapis.com/api.RegisterJobRequest",
     "Job": {
       "Region": "global",
-      "ID": "RecommendationService",
-      "Name": "RecommendationService",
+      "ID": "recommendationservice",
+      "Name": "recommendationservice",
       "Type": "service",
       "Priority": 75,
       "Datacenters": [
@@ -17,7 +17,7 @@
           "Count": 1,
           "Tasks": [
             {
-              "Name": "RecommendationService-v0.1.4-31-gc4d8670",
+              "Name": "recommendationservice-v0.1.4-31-gc4d8670",
               "Driver": "docker",
               "Config": {
                 "dns_options": [
@@ -26,13 +26,81 @@
                 "image": "smintz/recommendationservice:v0.1.4-31-gc4d8670"
               },
               "Env": {
-                "PRODUCT_CATALOG_SERVICE_ADDR": "localhost:10000"
+                "PRODUCT_CATALOG_SERVICE_ADDR": "envoy:10000"
               },
               "Resources": {
                 "CPU": 100,
                 "MemoryMB": 64,
                 "Networks": [
                   {}
+                ]
+              }
+            },
+            {
+              "Name": "recommendationservice-envoy",
+              "Driver": "docker",
+              "Config": {
+                "dns_options": [
+                  "169.254.1.1"
+                ],
+                "image": "envoyproxy/envoy:v1.15.0",
+                "port_map": [
+                  {
+                    "recommendationservice-envoy-admin": 9901
+                  }
+                ]
+              },
+              "Services": [
+                {
+                  "Name": "recommendationservice-envoy",
+                  "PortLabel": "recommendationservice-envoy",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Name": "recommendationservice-envoy-admin",
+                  "PortLabel": "recommendationservice-envoy-admin",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                }
+              ],
+              "Resources": {
+                "CPU": 100,
+                "MemoryMB": 64,
+                "Networks": [
+                  {
+                    "Mode": "bridge",
+                    "DynamicPorts": [
+                      {
+                        "Label": "recommendationservice-envoy",
+                        "To": 10000
+                      },
+                      {
+                        "Label": "recommendationservice-envoy-admin",
+                        "To": 9901
+                      }
+                    ]
+                  }
                 ]
               }
             }

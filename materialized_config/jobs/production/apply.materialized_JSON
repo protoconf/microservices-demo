@@ -4,7 +4,7 @@
     "@type": "type.googleapis.com/exec_config.Config",
     "items": [
       {
-        "path": "jobs/production/production-jobs-executor",
+        "path": "jobs/production/frontend",
         "protoFile": "nomad/v0.11.1/api.proto",
         "actions": [
           {
@@ -16,7 +16,7 @@
         ]
       },
       {
-        "path": "jobs/production/Frontend",
+        "path": "jobs/production/adservice",
         "protoFile": "nomad/v0.11.1/api.proto",
         "actions": [
           {
@@ -28,7 +28,7 @@
         ]
       },
       {
-        "path": "jobs/production/AdService",
+        "path": "jobs/production/cartservice",
         "protoFile": "nomad/v0.11.1/api.proto",
         "actions": [
           {
@@ -40,7 +40,7 @@
         ]
       },
       {
-        "path": "jobs/production/CartService",
+        "path": "jobs/production/checkoutservice",
         "protoFile": "nomad/v0.11.1/api.proto",
         "actions": [
           {
@@ -52,7 +52,7 @@
         ]
       },
       {
-        "path": "jobs/production/CheckoutService",
+        "path": "jobs/production/currencyservice",
         "protoFile": "nomad/v0.11.1/api.proto",
         "actions": [
           {
@@ -64,7 +64,7 @@
         ]
       },
       {
-        "path": "jobs/production/CurrencyService",
+        "path": "jobs/production/paymentservice",
         "protoFile": "nomad/v0.11.1/api.proto",
         "actions": [
           {
@@ -76,7 +76,7 @@
         ]
       },
       {
-        "path": "jobs/production/PaymentService",
+        "path": "jobs/production/productcatalogservice",
         "protoFile": "nomad/v0.11.1/api.proto",
         "actions": [
           {
@@ -88,7 +88,7 @@
         ]
       },
       {
-        "path": "jobs/production/ProductCatalogService",
+        "path": "jobs/production/recommendationservice",
         "protoFile": "nomad/v0.11.1/api.proto",
         "actions": [
           {
@@ -100,19 +100,7 @@
         ]
       },
       {
-        "path": "jobs/production/RecommendationService",
-        "protoFile": "nomad/v0.11.1/api.proto",
-        "actions": [
-          {
-            "http": {
-              "uri": "http://127.0.0.1:4646/v1/jobs",
-              "method": "POST"
-            }
-          }
-        ]
-      },
-      {
-        "path": "jobs/production/ShippingService",
+        "path": "jobs/production/shippingservice",
         "protoFile": "nomad/v0.11.1/api.proto",
         "actions": [
           {

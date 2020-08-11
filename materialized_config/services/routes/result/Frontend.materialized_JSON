@@ -2,23 +2,38 @@
   "protoFile": "envoy/config/bootstrap/v2/bootstrap.proto",
   "value": {
     "@type": "type.googleapis.com/envoy.config.bootstrap.v2.Bootstrap",
+    "admin": {
+      "accessLogPath": "/dev/stdout",
+      "address": {
+        "socketAddress": {
+          "address": "0.0.0.0",
+          "portValue": 8881
+        }
+      }
+    },
     "staticResources": {
       "listeners": [
         {
-          "name": "listener_0",
+          "address": {
+            "socketAddress": {
+              "address": "0.0.0.0",
+              "portValue": 10000
+            }
+          },
           "filterChains": [
             {
               "filters": [
                 {
+                  "name": "envoy.filters.network.http_connection_manager",
                   "typedConfig": {
                     "@type": "type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager",
                     "routeConfig": {
-                      "name": "dummy_route",
+                      "name": "frontend_route",
                       "virtualHosts": [
                         {
-                          "name": "AdService",
+                          "name": "adservice",
                           "domains": [
-                            "*"
+                            "adservice"
                           ],
                           "routes": [
                             {
@@ -26,17 +41,16 @@
                                 "prefix": "/"
                               },
                               "route": {
-                                "cluster": "google_service",
-                                "hostRewrite": "www.google.com"
+                                "cluster": "local_service"
                               },
-                              "name": "AdService"
+                              "name": "adservice"
                             }
                           ]
                         },
                         {
-                          "name": "CartService",
+                          "name": "cartservice",
                           "domains": [
-                            "*"
+                            "cartservice"
                           ],
                           "routes": [
                             {
@@ -44,17 +58,16 @@
                                 "prefix": "/"
                               },
                               "route": {
-                                "cluster": "google_service",
-                                "hostRewrite": "www.google.com"
+                                "cluster": "local_service"
                               },
-                              "name": "CartService"
+                              "name": "cartservice"
                             }
                           ]
                         },
                         {
-                          "name": "CheckoutService",
+                          "name": "checkoutservice",
                           "domains": [
-                            "*"
+                            "checkoutservice"
                           ],
                           "routes": [
                             {
@@ -62,17 +75,16 @@
                                 "prefix": "/"
                               },
                               "route": {
-                                "cluster": "google_service",
-                                "hostRewrite": "www.google.com"
+                                "cluster": "local_service"
                               },
-                              "name": "CheckoutService"
+                              "name": "checkoutservice"
                             }
                           ]
                         },
                         {
-                          "name": "CurrencyService",
+                          "name": "currencyservice",
                           "domains": [
-                            "*"
+                            "currencyservice"
                           ],
                           "routes": [
                             {
@@ -80,17 +92,16 @@
                                 "prefix": "/"
                               },
                               "route": {
-                                "cluster": "google_service",
-                                "hostRewrite": "www.google.com"
+                                "cluster": "local_service"
                               },
-                              "name": "CurrencyService"
+                              "name": "currencyservice"
                             }
                           ]
                         },
                         {
-                          "name": "ProductCatalogService",
+                          "name": "productcatalogservice",
                           "domains": [
-                            "*"
+                            "productcatalogservice"
                           ],
                           "routes": [
                             {
@@ -98,17 +109,16 @@
                                 "prefix": "/"
                               },
                               "route": {
-                                "cluster": "google_service",
-                                "hostRewrite": "www.google.com"
+                                "cluster": "local_service"
                               },
-                              "name": "ProductCatalogService"
+                              "name": "productcatalogservice"
                             }
                           ]
                         },
                         {
-                          "name": "RecommendationService",
+                          "name": "recommendationservice",
                           "domains": [
-                            "*"
+                            "recommendationservice"
                           ],
                           "routes": [
                             {
@@ -116,17 +126,16 @@
                                 "prefix": "/"
                               },
                               "route": {
-                                "cluster": "google_service",
-                                "hostRewrite": "www.google.com"
+                                "cluster": "local_service"
                               },
-                              "name": "RecommendationService"
+                              "name": "recommendationservice"
                             }
                           ]
                         },
                         {
-                          "name": "ShippingService",
+                          "name": "shippingservice",
                           "domains": [
-                            "*"
+                            "shippingservice"
                           ],
                           "routes": [
                             {
@@ -134,21 +143,33 @@
                                 "prefix": "/"
                               },
                               "route": {
-                                "cluster": "google_service",
-                                "hostRewrite": "www.google.com"
+                                "cluster": "local_service"
                               },
-                              "name": "ShippingService"
+                              "name": "shippingservice"
                             }
                           ]
                         }
                       ]
                     },
-                    "statPrefix": "dummy_service"
+                    "statPrefix": "frontend"
                   }
                 }
               ]
             }
           ]
+        }
+      ],
+      "clusters": [
+        {
+          "name": "local_service",
+          "type": "STRICT_DNS",
+          "connectTimeout": "0.250s",
+          "loadAssignment": {
+            "clusterName": "local_service",
+            "endpoints": [
+              {}
+            ]
+          }
         }
       ]
     }

@@ -1,0 +1,93 @@
+load("//envoy/config/bootstrap/v2/bootstrap.proto", "Bootstrap", "Admin")
+load(
+    "//envoy/config/filter/network/http_connection_manager/v2/http_connection_manager.proto",
+    "HttpConnectionManager",
+)
+load("//envoy/api/v2/route.proto", "RouteConfiguration")
+load("//envoy/api/v2/listener.proto", "Listener")
+load("//envoy/api/v2/cluster.proto", "Cluster")
+load("//envoy/api/v2/endpoint.proto", "ClusterLoadAssignment")
+load("//envoy/api/v2/endpoint/endpoint_components.proto", "LocalityLbEndpoints")
+load("//envoy/api/v2/listener/listener_components.proto", "FilterChain", "Filter")
+load(
+    "//envoy/api/v2/route/route_components.proto",
+    "VirtualHost",
+    "Route",
+    "RouteMatch",
+    "RouteAction",
+)
+load("//envoy/api/v2/core/address.proto", "Address", "SocketAddress")
+load("/google/protobuf/duration.proto", "Duration")
+
+
+def virtual_host_from_service(service):
+    svc_name = service.name.lower()
+    return VirtualHost(
+        name=svc_name,
+        domains=[svc_name],
+        routes=[
+            Route(
+                name=svc_name,
+                match=RouteMatch(prefix="/"),
+                route=RouteAction(cluster="local_service"),
+            )
+        ],
+    )
+
+
+def connection_manager_for_service(service):
+    return HttpConnectionManager(
+        codec_type=HttpConnectionManager.CodecType.AUTO,
+        stat_prefix=service.name.lower(),
+        route_config=RouteConfiguration(
+            name=service.name.lower() + "_route",
+            virtual_hosts=[virtual_host_from_service(s) for s in service.downstreams],
+        ),
+    )
+
+
+def bootstrap_for_service(service):
+    bootstrap = Bootstrap(
+        admin=Admin(
+            access_log_path="/dev/stdout",
+            address=Address(
+                socket_address=SocketAddress(address="0.0.0.0", port_value=8881)
+            ),
+        ),
+        static_resources=Bootstrap.StaticResources(
+            listeners=[
+                Listener(
+                    address=Address(
+                        socket_address=SocketAddress(
+                            address="0.0.0.0", port_value=10000
+                        )
+                    ),
+                    # name="listener_0",
+                    filter_chains=[
+                        FilterChain(
+                            filters=[
+                                Filter(
+                                    name="envoy.filters.network.http_connection_manager",
+                                    typed_config=connection_manager_for_service(
+                                        service
+                                    ),
+                                )
+                            ]
+                        )
+                    ],
+                )
+            ],
+            clusters=[
+                Cluster(
+                    name="local_service",
+                    connect_timeout=Duration(nanos=25 * 10000000),
+                    type=Cluster.DiscoveryType.STRICT_DNS,
+                    lb_policy=Cluster.LbPolicy.ROUND_ROBIN,
+                    load_assignment=ClusterLoadAssignment(
+                        cluster_name="local_service", endpoints=[LocalityLbEndpoints()],
+                    ),
+                )
+            ],
+        ),
+    )
+    return bootstrap

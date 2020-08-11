@@ -23,7 +23,7 @@ def ProtoconfExecTask(config, templates={}):
         for key in templates.keys()
     ]
     task.SetConfig("network_mode", "host")
-    task.SetConfig("volumes", ["/etc/ssl:/etc/ssl"])
+    # task.SetConfig("volumes", ["/etc/ssl:/etc/ssl"])
     task.SetConfig("args", ["exec", "-config=" + config, "-proto_dir=/local"])
     task.SetCPU(1000)
     return task.task

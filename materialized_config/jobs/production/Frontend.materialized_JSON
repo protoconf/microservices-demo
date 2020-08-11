@@ -4,8 +4,8 @@
     "@type": "type.googleapis.com/api.RegisterJobRequest",
     "Job": {
       "Region": "global",
-      "ID": "Frontend",
-      "Name": "Frontend",
+      "ID": "frontend",
+      "Name": "frontend",
       "Type": "service",
       "Priority": 75,
       "Datacenters": [
@@ -17,7 +17,7 @@
           "Count": 1,
           "Tasks": [
             {
-              "Name": "Frontend-v0.1.4-31-gc4d8670",
+              "Name": "frontend-v0.1.4-31-gc4d8670",
               "Driver": "docker",
               "Config": {
                 "dns_options": [
@@ -26,19 +26,87 @@
                 "image": "smintz/frontend:v0.1.4-31-gc4d8670"
               },
               "Env": {
-                "AD_SERVICE_ADDR": "localhost:10000",
-                "CART_SERVICE_ADDR": "localhost:10000",
-                "CHECKOUT_SERVICE_ADDR": "localhost:10000",
-                "CURRENCY_SERVICE_ADDR": "localhost:10000",
-                "PRODUCT_CATALOG_SERVICE_ADDR": "localhost:10000",
-                "RECOMMENDATION_SERVICE_ADDR": "localhost:10000",
-                "SHIPPING_SERVICE_ADDR": "localhost:10000"
+                "AD_SERVICE_ADDR": "envoy:10000",
+                "CART_SERVICE_ADDR": "envoy:10000",
+                "CHECKOUT_SERVICE_ADDR": "envoy:10000",
+                "CURRENCY_SERVICE_ADDR": "envoy:10000",
+                "PRODUCT_CATALOG_SERVICE_ADDR": "envoy:10000",
+                "RECOMMENDATION_SERVICE_ADDR": "envoy:10000",
+                "SHIPPING_SERVICE_ADDR": "envoy:10000"
               },
               "Resources": {
                 "CPU": 100,
                 "MemoryMB": 64,
                 "Networks": [
                   {}
+                ]
+              }
+            },
+            {
+              "Name": "frontend-envoy",
+              "Driver": "docker",
+              "Config": {
+                "dns_options": [
+                  "169.254.1.1"
+                ],
+                "image": "envoyproxy/envoy:v1.15.0",
+                "port_map": [
+                  {
+                    "frontend-envoy-admin": 9901
+                  }
+                ]
+              },
+              "Services": [
+                {
+                  "Name": "frontend-envoy",
+                  "PortLabel": "frontend-envoy",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Name": "frontend-envoy-admin",
+                  "PortLabel": "frontend-envoy-admin",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                }
+              ],
+              "Resources": {
+                "CPU": 100,
+                "MemoryMB": 64,
+                "Networks": [
+                  {
+                    "Mode": "bridge",
+                    "DynamicPorts": [
+                      {
+                        "Label": "frontend-envoy",
+                        "To": 10000
+                      },
+                      {
+                        "Label": "frontend-envoy-admin",
+                        "To": 9901
+                      }
+                    ]
+                  }
                 ]
               }
             }

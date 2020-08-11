@@ -4,8 +4,8 @@
     "@type": "type.googleapis.com/api.RegisterJobRequest",
     "Job": {
       "Region": "global",
-      "ID": "AdService",
-      "Name": "AdService",
+      "ID": "adservice",
+      "Name": "adservice",
       "Type": "service",
       "Priority": 75,
       "Datacenters": [
@@ -17,7 +17,7 @@
           "Count": 1,
           "Tasks": [
             {
-              "Name": "AdService-v0.1.4-31-gc4d8670",
+              "Name": "adservice-v0.1.4-31-gc4d8670",
               "Driver": "docker",
               "Config": {
                 "dns_options": [
@@ -30,6 +30,74 @@
                 "MemoryMB": 64,
                 "Networks": [
                   {}
+                ]
+              }
+            },
+            {
+              "Name": "adservice-envoy",
+              "Driver": "docker",
+              "Config": {
+                "dns_options": [
+                  "169.254.1.1"
+                ],
+                "image": "envoyproxy/envoy:v1.15.0",
+                "port_map": [
+                  {
+                    "adservice-envoy-admin": 9901
+                  }
+                ]
+              },
+              "Services": [
+                {
+                  "Name": "adservice-envoy",
+                  "PortLabel": "adservice-envoy",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Name": "adservice-envoy-admin",
+                  "PortLabel": "adservice-envoy-admin",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                }
+              ],
+              "Resources": {
+                "CPU": 100,
+                "MemoryMB": 64,
+                "Networks": [
+                  {
+                    "Mode": "bridge",
+                    "DynamicPorts": [
+                      {
+                        "Label": "adservice-envoy",
+                        "To": 10000
+                      },
+                      {
+                        "Label": "adservice-envoy-admin",
+                        "To": 9901
+                      }
+                    ]
+                  }
                 ]
               }
             }

@@ -4,8 +4,8 @@
     "@type": "type.googleapis.com/api.RegisterJobRequest",
     "Job": {
       "Region": "global",
-      "ID": "PaymentService",
-      "Name": "PaymentService",
+      "ID": "paymentservice",
+      "Name": "paymentservice",
       "Type": "service",
       "Priority": 75,
       "Datacenters": [
@@ -17,7 +17,7 @@
           "Count": 1,
           "Tasks": [
             {
-              "Name": "PaymentService-v0.1.4-31-gc4d8670",
+              "Name": "paymentservice-v0.1.4-31-gc4d8670",
               "Driver": "docker",
               "Config": {
                 "dns_options": [
@@ -30,6 +30,74 @@
                 "MemoryMB": 64,
                 "Networks": [
                   {}
+                ]
+              }
+            },
+            {
+              "Name": "paymentservice-envoy",
+              "Driver": "docker",
+              "Config": {
+                "dns_options": [
+                  "169.254.1.1"
+                ],
+                "image": "envoyproxy/envoy:v1.15.0",
+                "port_map": [
+                  {
+                    "paymentservice-envoy-admin": 9901
+                  }
+                ]
+              },
+              "Services": [
+                {
+                  "Name": "paymentservice-envoy",
+                  "PortLabel": "paymentservice-envoy",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Name": "paymentservice-envoy-admin",
+                  "PortLabel": "paymentservice-envoy-admin",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                }
+              ],
+              "Resources": {
+                "CPU": 100,
+                "MemoryMB": 64,
+                "Networks": [
+                  {
+                    "Mode": "bridge",
+                    "DynamicPorts": [
+                      {
+                        "Label": "paymentservice-envoy",
+                        "To": 10000
+                      },
+                      {
+                        "Label": "paymentservice-envoy-admin",
+                        "To": 9901
+                      }
+                    ]
+                  }
                 ]
               }
             }

@@ -22,19 +22,25 @@ def generate_job_for_service(svc):
     Returns:
         a job
     """
-    job = NewJob(svc.name)
-    artifact = svc.name.lower()
+    name = svc.name.lower()
+    job = NewJob(name)
+    artifact = svc.artifact.name if svc.artifact else svc.name.lower()
 
     for ver in svc.versions:
         v = version(ver.version)
-        task = job.NewTask(svc.name + "-" + v, v)
+        task = job.NewTask(name + "-" + v, v)
         task.SetImage("smintz/" + artifact + ":" + v)
         task.task.Env = {}
         for s in svc.downstreams:
             env_name = (
                 re.sub("([a-z0-9])([A-Z])", "${1}_${2}", s.name).upper() + "_ADDR"
             )
-            task.task.Env[env_name] = "localhost:10000"
+            task.task.Env[env_name] = "envoy:10000"
+        envoy = job.NewTask(name + "-envoy", v)
+        envoy.SetImage("envoyproxy/envoy:v1.15.0")
+        envoy.NewService(name + "-envoy", 10000)
+        envoy.NewService(name + "-envoy-admin", 9901)
+        # envoy.SetConfig("args", ["-c /local/envoy.yaml"])
 
     return job
 

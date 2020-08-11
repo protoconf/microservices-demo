@@ -4,8 +4,8 @@
     "@type": "type.googleapis.com/api.RegisterJobRequest",
     "Job": {
       "Region": "global",
-      "ID": "CheckoutService",
-      "Name": "CheckoutService",
+      "ID": "checkoutservice",
+      "Name": "checkoutservice",
       "Type": "service",
       "Priority": 75,
       "Datacenters": [
@@ -17,7 +17,7 @@
           "Count": 1,
           "Tasks": [
             {
-              "Name": "CheckoutService-v0.1.4-31-gc4d8670",
+              "Name": "checkoutservice-v0.1.4-31-gc4d8670",
               "Driver": "docker",
               "Config": {
                 "dns_options": [
@@ -26,18 +26,86 @@
                 "image": "smintz/checkoutservice:v0.1.4-31-gc4d8670"
               },
               "Env": {
-                "CART_SERVICE_ADDR": "localhost:10000",
-                "CURRENCY_SERVICE_ADDR": "localhost:10000",
-                "EMAIL_SERVICE_ADDR": "localhost:10000",
-                "PAYMENT_SERVICE_ADDR": "localhost:10000",
-                "PRODUCT_CATALOG_SERVICE_ADDR": "localhost:10000",
-                "SHIPPING_SERVICE_ADDR": "localhost:10000"
+                "CART_SERVICE_ADDR": "envoy:10000",
+                "CURRENCY_SERVICE_ADDR": "envoy:10000",
+                "EMAIL_SERVICE_ADDR": "envoy:10000",
+                "PAYMENT_SERVICE_ADDR": "envoy:10000",
+                "PRODUCT_CATALOG_SERVICE_ADDR": "envoy:10000",
+                "SHIPPING_SERVICE_ADDR": "envoy:10000"
               },
               "Resources": {
                 "CPU": 100,
                 "MemoryMB": 64,
                 "Networks": [
                   {}
+                ]
+              }
+            },
+            {
+              "Name": "checkoutservice-envoy",
+              "Driver": "docker",
+              "Config": {
+                "dns_options": [
+                  "169.254.1.1"
+                ],
+                "image": "envoyproxy/envoy:v1.15.0",
+                "port_map": [
+                  {
+                    "checkoutservice-envoy-admin": 9901
+                  }
+                ]
+              },
+              "Services": [
+                {
+                  "Name": "checkoutservice-envoy",
+                  "PortLabel": "checkoutservice-envoy",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                },
+                {
+                  "Name": "checkoutservice-envoy-admin",
+                  "PortLabel": "checkoutservice-envoy-admin",
+                  "Connect": {
+                    "SidecarService": {
+                      "Tags": [
+                        "connect"
+                      ]
+                    },
+                    "SidecarTask": {
+                      "Env": {
+                        "HELLO": "world"
+                      }
+                    }
+                  }
+                }
+              ],
+              "Resources": {
+                "CPU": 100,
+                "MemoryMB": 64,
+                "Networks": [
+                  {
+                    "Mode": "bridge",
+                    "DynamicPorts": [
+                      {
+                        "Label": "checkoutservice-envoy",
+                        "To": 10000
+                      },
+                      {
+                        "Label": "checkoutservice-envoy-admin",
+                        "To": 9901
+                      }
+                    ]
+                  }
                 ]
               }
             }

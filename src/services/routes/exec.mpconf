@@ -1,0 +1,49 @@
+load("helpers.pinc", "bootstrap_for_service")
+load(
+    "//executor/exec_config.proto",
+    "Config",
+    "WatcherConfig",
+    "Action",
+    "ActionTypeWriteToFile",
+)
+load("//services/registry.pinc", svcs="reg")
+
+
+def executor_for_service(svc):
+    executor = Config(
+        items=[
+            WatcherConfig(
+                path="services/routes/result/" + svc.name,
+                proto_file="envoy/config/bootstrap/v2/bootstrap.proto",
+                actions=[
+                    Action(
+                        file=ActionTypeWriteToFile(
+                            path="/tmp/{}.json".format(svc.name),
+                            serializer=Config.Serializer.JSON,
+                        ),
+                        then=[
+                            Action(
+                                file=ActionTypeWriteToFile(
+                                    path="/tmp/{}.pb".format(svc.name),
+                                    serializer=Config.Serializer.PB,
+                                )
+                            ),
+                        ],
+                        on_error=[
+                            Action(
+                                file=ActionTypeWriteToFile(
+                                    path="/tmp/{}.yaml".format(svc.name),
+                                    serializer=Config.Serializer.YAML,
+                                )
+                            ),
+                        ],
+                    ),
+                ],
+            )
+        ]
+    )
+    return executor
+
+
+def main():
+    return dict([[svc.name, executor_for_service(svc)] for svc in svcs.services])

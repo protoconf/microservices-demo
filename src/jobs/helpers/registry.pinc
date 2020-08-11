@@ -57,12 +57,12 @@ def JobRegistry(
         register_job(j.job)
         return j
 
-    executor_job = NewJob(executor_name)
-    executor_job.AddTask(
-        ProtoconfExecTask(
-            "/".join([config_root, "apply"]), {"nomad/v0.11.1/api.proto": NOMAD_PROTO}
-        )
-    )
-    register_job(executor_job.job)
+    # executor_job = NewJob(executor_name)
+    # executor_job.AddTask(
+    #     ProtoconfExecTask(
+    #         "/".join([config_root, "apply"]), {"nomad/v0.11.1/api.proto": NOMAD_PROTO}
+    #     )
+    # )
+    # register_job(executor_job.job)
 
     return struct(output=output, register_job=register_job, NewJob=newJob)
