@@ -1,0 +1,146 @@
+"""
+Task Helper
+"""
+
+load("/google/protobuf/struct.proto", "Value", "ListValue", "Struct")
+load(
+    "/nomad/v0.11.1/api.proto",
+    "Task",
+    "Vault",
+    "Resources",
+    "NetworkResource",
+    "Port",
+    "Service",
+    "ConsulConnect",
+    "ConsulSidecarService",
+    "SidecarTask",
+)
+
+
+def value(v):
+    """
+    value gets a variable and returns is as a wkt `Value`
+
+    Args:
+        v: a variable
+    Returns:
+        Value()
+    """
+    if type(v) == "string":
+        return Value(string_value=v)
+    if type(v) == "int":
+        return Value(number_value=float(v))
+    if type(v) == "double":
+        return Value(number_value=v)
+    if type(v) == "bool":
+        return Value(bool_value=v)
+    if type(v) == "list":
+        return Value(list_value=ListValue(values=[value(i) for i in v]))
+    if type(v) == "dict":
+        return Value()
+    return None
+
+
+DEFAULT_TASK_DRIVER = "docker"
+
+
+def NewTask(name, image=None):
+    """
+    NewTask create a new task helper
+
+    Args:
+        name: name of the task
+        image: name of the image to be used
+    Returns:
+        a struct conains helper functions
+    """
+    local_task = Task(
+        Name=name,
+        Resources=Resources(
+            CPU=100,
+            MemoryMB=64,
+            Networks=[NetworkResource(ReservedPorts=[], DynamicPorts=[])],
+        ),
+    )
+
+    def setCPU(num):
+        local_task.Resources.CPU = num
+
+    def setMemory(num):
+        local_task.Resources.MemoryMB = num
+
+    def setConfig(key, v):
+        local_task.Config[key] = value(v)
+
+    def setImage(imageName):
+        if local_task.Driver == "":
+            local_task.Driver = DEFAULT_TASK_DRIVER
+        if local_task.Driver not in ["docker", "rkt"]:
+            fail("task driver does not support images")
+
+        setConfig("image", imageName)
+        # local_task.Config["image"] = Value(string_value=imageName)
+
+    def setPortMapping(label, port):
+        if not hasattr(local_task.Config, "port_map"):
+            local_task.Config["port_map"] = Value(list_value=ListValue(values=[]))
+        local_task.Config["port_map"].list_value.values.append(
+            Value(struct_value=Struct(fields={label: value(port)}))
+        )
+
+    def newPort(label, to=None, reserve=None):
+        network = local_task.Resources.Networks[0]
+        network.Mode = "bridge"
+        for n in network.ReservedPorts + network.DynamicPorts:
+            if label == n.Label:
+                return n
+
+        port = Port(Label=label)
+        if to:
+            port.To = to
+            setPortMapping(label, to)
+        if reserve:
+            port.Value = reserve
+            network.ReservedPorts.append(port)
+        else:
+            network.DynamicPorts.append(port)
+        return port
+
+    def newService(name, to=None, reserve=None, tags=[], checks=[], label=None):
+        if not label:
+            label = name
+
+        port = newPort(label, to, reserve)
+
+        service = Service(
+            Name=name,
+            PortLabel=port.Label,
+            Tags=tags,
+            Checks=checks,
+            Connect=ConsulConnect(
+                SidecarService=ConsulSidecarService(Tags=["connect"]),
+                SidecarTask=SidecarTask(Env={"HELLO": "world"}),
+            ),
+        )
+        local_task.Services.append(service)
+        return service
+
+    def addVaultPolicies(*policies):
+        local_task.Vault = Vault(Policies=list(policies))
+
+    if image:
+        setImage(image)
+
+    setConfig("dns_options", ["169.254.1.1"])
+
+    return struct(
+        task=local_task,
+        SetImage=setImage,
+        AddVaultPolicies=addVaultPolicies,
+        NewPort=newPort,
+        NewService=newService,
+        SetConfig=setConfig,
+        SetCPU=setCPU,
+        SetMemory=setMemory,
+        Value=value,
+    )

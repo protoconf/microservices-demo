@@ -1,0 +1,9 @@
+load("exec_config.proto", "WatcherConfig")
+
+
+def proto_file_missing(config):
+    if not config.proto_file:
+        fail("missing proto file")
+
+
+add_validator(WatcherConfig, proto_file_missing)

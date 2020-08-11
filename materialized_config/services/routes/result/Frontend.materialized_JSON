@@ -70,6 +70,24 @@
                           ]
                         },
                         {
+                          "name": "CurrencyService",
+                          "domains": [
+                            "*"
+                          ],
+                          "routes": [
+                            {
+                              "match": {
+                                "prefix": "/"
+                              },
+                              "route": {
+                                "cluster": "google_service",
+                                "hostRewrite": "www.google.com"
+                              },
+                              "name": "CurrencyService"
+                            }
+                          ]
+                        },
+                        {
                           "name": "ProductCatalogService",
                           "domains": [
                             "*"
@@ -102,6 +120,24 @@
                                 "hostRewrite": "www.google.com"
                               },
                               "name": "RecommendationService"
+                            }
+                          ]
+                        },
+                        {
+                          "name": "ShippingService",
+                          "domains": [
+                            "*"
+                          ],
+                          "routes": [
+                            {
+                              "match": {
+                                "prefix": "/"
+                              },
+                              "route": {
+                                "cluster": "google_service",
+                                "hostRewrite": "www.google.com"
+                              },
+                              "name": "ShippingService"
                             }
                           ]
                         }

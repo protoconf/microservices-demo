@@ -1,0 +1,527 @@
+syntax = "proto3";
+
+package api;
+
+import "google/protobuf/duration.proto";
+
+import "google/protobuf/struct.proto";
+
+option go_package = "github.com/hashicorp/nomad/api";
+
+message RegisterJobRequest {
+  Job Job = 1;
+
+  bool EnforceIndex = 2;
+
+  uint64 JobModifyIndex = 3;
+
+  bool PolicyOverride = 4;
+}
+
+message Job {
+  bool Stop = 1;
+
+  string Region = 2;
+
+  string Namespace = 3;
+
+  string ID = 4;
+
+  string ParentID = 5;
+
+  string Name = 6;
+
+  string Type = 7;
+
+  int32 Priority = 8;
+
+  bool AllAtOnce = 9;
+
+  repeated string Datacenters = 10;
+
+  repeated Constraint Constraints = 11;
+
+  repeated Affinity Affinities = 12;
+
+  repeated TaskGroup TaskGroups = 13;
+
+  UpdateStrategy Update = 14;
+
+  repeated Spread Spreads = 15;
+
+  PeriodicConfig Periodic = 16;
+
+  ParameterizedJobConfig ParameterizedJob = 17;
+
+  bool Dispatched = 18;
+
+  repeated bytes Payload = 19;
+
+  ReschedulePolicy Reschedule = 20;
+
+  MigrateStrategy Migrate = 21;
+
+  map<string, string> Meta = 22;
+
+  string ConsulToken = 23;
+
+  string VaultToken = 24;
+
+  string Status = 25;
+
+  string StatusDescription = 26;
+
+  bool Stable = 27;
+
+  uint64 Version = 28;
+
+  int64 SubmitTime = 29;
+
+  uint64 CreateIndex = 30;
+
+  uint64 ModifyIndex = 31;
+
+  uint64 JobModifyIndex = 32;
+}
+
+message Constraint {
+  string LTarget = 1;
+
+  string RTarget = 2;
+
+  string Operand = 3;
+}
+
+message Affinity {
+  string LTarget = 1;
+
+  string RTarget = 2;
+
+  string Operand = 3;
+
+  int32 Weight = 4;
+}
+
+message TaskGroup {
+  string Name = 1;
+
+  int32 Count = 2;
+
+  repeated Constraint Constraints = 3;
+
+  repeated Affinity Affinities = 4;
+
+  repeated Task Tasks = 5;
+
+  repeated Spread Spreads = 6;
+
+  VolumeRequest Volumes = 7;
+
+  RestartPolicy RestartPolicy = 8;
+
+  ReschedulePolicy ReschedulePolicy = 9;
+
+  EphemeralDisk EphemeralDisk = 10;
+
+  UpdateStrategy Update = 11;
+
+  MigrateStrategy Migrate = 12;
+
+  repeated NetworkResource Networks = 13;
+
+  map<string, string> Meta = 14;
+
+  repeated Service Services = 15;
+
+  google.protobuf.Duration ShutdownDelay = 16;
+}
+
+message Task {
+  string Name = 1;
+
+  string Driver = 2;
+
+  string User = 3;
+
+  map<string, google.protobuf.Value> Config = 4;
+
+  repeated Constraint Constraints = 5;
+
+  repeated Affinity Affinities = 6;
+
+  map<string, string> Env = 7;
+
+  repeated Service Services = 8;
+
+  Resources Resources = 9;
+
+  map<string, string> Meta = 10;
+
+  google.protobuf.Duration KillTimeout = 11;
+
+  LogConfig LogConfig = 12;
+
+  repeated TaskArtifact Artifacts = 13;
+
+  Vault Vault = 14;
+
+  repeated Template Templates = 15;
+
+  DispatchPayloadConfig DispatchPayload = 16;
+
+  repeated VolumeMount VolumeMounts = 17;
+
+  bool Leader = 18;
+
+  int64 ShutdownDelay = 19;
+
+  string KillSignal = 20;
+
+  string Kind = 21;
+}
+
+message Service {
+  string Id = 1;
+
+  string Name = 2;
+
+  repeated string Tags = 3;
+
+  repeated string CanaryTags = 4;
+
+  string PortLabel = 5;
+
+  string AddressMode = 6;
+
+  repeated ServiceCheck Checks = 7;
+
+  CheckRestart CheckRestart = 8;
+
+  ConsulConnect Connect = 9;
+
+  map<string, string> Meta = 10;
+
+  map<string, string> CanaryMeta = 11;
+}
+
+message ServiceCheck {
+  string Id = 1;
+
+  string Name = 2;
+
+  string Type = 3;
+
+  string Command = 4;
+
+  repeated string Args = 5;
+
+  string Path = 6;
+
+  string Protocol = 7;
+
+  string PortLabel = 8;
+
+  string AddressMode = 9;
+
+  int64 Interval = 10;
+
+  int64 Timeout = 11;
+
+  string InitialStatus = 12;
+
+  bool TLSSkipVerify = 13;
+
+  repeated string Header = 14;
+
+  string Method = 15;
+
+  CheckRestart CheckRestart = 16;
+
+  string GRPCService = 17;
+
+  bool GRPCUseTLS = 18;
+
+  string TaskName = 19;
+}
+
+message CheckRestart {
+  int32 Limit = 1;
+
+  google.protobuf.Duration Grace = 2;
+
+  bool IgnoreWarnings = 3;
+}
+
+message ConsulConnect {
+  bool Native = 1;
+
+  ConsulSidecarService SidecarService = 2;
+
+  SidecarTask SidecarTask = 3;
+}
+
+message ConsulSidecarService {
+  repeated string Tags = 1;
+
+  string Port = 2;
+
+  ConsulProxy Proxy = 3;
+}
+
+message ConsulProxy {
+  string LocalServiceAddress = 1;
+
+  int32 LocalServicePort = 2;
+
+  repeated ConsulUpstream Upstreams = 3;
+
+  map<string, google.protobuf.Value> Config = 4;
+}
+
+message ConsulUpstream {
+  string DestinationName = 1;
+
+  int32 LocalBindPort = 2;
+}
+
+message SidecarTask {
+  string Name = 1;
+
+  string Driver = 2;
+
+  string User = 3;
+
+  map<string, google.protobuf.Value> Config = 4;
+
+  map<string, string> Env = 5;
+
+  Resources Resources = 6;
+
+  map<string, string> Meta = 7;
+
+  google.protobuf.Duration KillTimeout = 8;
+
+  LogConfig LogConfig = 9;
+
+  google.protobuf.Duration ShutdownDelay = 10;
+
+  string KillSignal = 11;
+}
+
+message Resources {
+  int32 CPU = 1;
+
+  int32 MemoryMB = 2;
+
+  int32 DiskMB = 3;
+
+  repeated NetworkResource Networks = 4;
+
+  repeated RequestedDevice Devices = 5;
+
+  int32 IOPS = 6;
+}
+
+message NetworkResource {
+  string Mode = 1;
+
+  string Device = 2;
+
+  string CIDR = 3;
+
+  string IP = 4;
+
+  int32 MBits = 5;
+
+  repeated Port ReservedPorts = 6;
+
+  repeated Port DynamicPorts = 7;
+}
+
+message Port {
+  string Label = 1;
+
+  int32 Value = 2;
+
+  int32 To = 3;
+}
+
+message RequestedDevice {
+  string Name = 1;
+
+  uint64 Count = 2;
+
+  repeated Constraint Constraints = 3;
+
+  repeated Affinity Affinities = 4;
+}
+
+message LogConfig {
+  int32 MaxFiles = 1;
+
+  int32 MaxFileSizeMB = 2;
+}
+
+message TaskArtifact {
+  string GetterSource = 1;
+
+  map<string, string> GetterOptions = 2;
+
+  string GetterMode = 3;
+
+  string RelativeDest = 4;
+}
+
+message Vault {
+  repeated string Policies = 1;
+
+  bool Env = 2;
+
+  string ChangeMode = 3;
+
+  string ChangeSignal = 4;
+}
+
+message Template {
+  string SourcePath = 1;
+
+  string DestPath = 2;
+
+  string EmbeddedTmpl = 3;
+
+  string ChangeMode = 4;
+
+  string ChangeSignal = 5;
+
+  google.protobuf.Duration Splay = 6;
+
+  string Perms = 7;
+
+  string LeftDelim = 8;
+
+  string RightDelim = 9;
+
+  bool Envvars = 10;
+
+  google.protobuf.Duration VaultGrace = 11;
+}
+
+message DispatchPayloadConfig {
+  string File = 1;
+}
+
+message VolumeMount {
+  string Volume = 1;
+
+  string Destination = 2;
+
+  bool ReadOnly = 3;
+
+  string PropagationMode = 4;
+}
+
+message Spread {
+  string Attribute = 1;
+
+  int32 Weight = 2;
+
+  repeated SpreadTarget SpreadTarget = 3;
+}
+
+message SpreadTarget {
+  string Value = 1;
+
+  uint32 Percent = 2;
+}
+
+message VolumeRequest {
+  string Name = 1;
+
+  string Type = 2;
+
+  string Source = 3;
+
+  bool ReadOnly = 4;
+}
+
+message RestartPolicy {
+  google.protobuf.Duration Interval = 1;
+
+  int32 Attempts = 2;
+
+  google.protobuf.Duration Delay = 3;
+
+  string Mode = 4;
+}
+
+message ReschedulePolicy {
+  int32 Attempts = 1;
+
+  google.protobuf.Duration Interval = 2;
+
+  google.protobuf.Duration Delay = 3;
+
+  string DelayFunction = 4;
+
+  google.protobuf.Duration MaxDelay = 5;
+
+  bool Unlimited = 6;
+}
+
+message EphemeralDisk {
+  bool Sticky = 1;
+
+  bool Migrate = 2;
+
+  int32 SizeMB = 3;
+}
+
+message UpdateStrategy {
+  google.protobuf.Duration Stagger = 1;
+
+  int32 MaxParallel = 2;
+
+  string HealthCheck = 3;
+
+  google.protobuf.Duration MinHealthyTime = 4;
+
+  google.protobuf.Duration HealthyDeadline = 5;
+
+  google.protobuf.Duration ProgressDeadline = 6;
+
+  int32 Canary = 7;
+
+  bool AutoRevert = 8;
+
+  bool AutoPromote = 9;
+}
+
+message MigrateStrategy {
+  int32 MaxParallel = 1;
+
+  string HealthCheck = 2;
+
+  google.protobuf.Duration MinHealthyTime = 3;
+
+  google.protobuf.Duration HealthyDeadline = 4;
+}
+
+message PeriodicConfig {
+  bool Enabled = 1;
+
+  string Spec = 2;
+
+  string SpecType = 3;
+
+  bool ProhibitOverlap = 4;
+
+  string TimeZone = 5;
+}
+
+message ParameterizedJobConfig {
+  string Payload = 1;
+
+  repeated string MetaRequired = 2;
+
+  repeated string MetaOptional = 3;
+}

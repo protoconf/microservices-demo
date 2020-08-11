@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package grafana;
+
+message Dashboard {
+    string title = 1;
+    repeated Row rows = 2;
+    Annotations annotations = 3;
+    string description = 4;
+    bool editable = 5;
+    string gnet_id = 6;
+    bool hide_controls = 7;
+    string id = 8;
+    // repeated string inputs = 9;
+    // repeated string links = 10;
+    google.protobuf.Duration refresh = 11;
+    bool schema_version = 12;
+    bool shared_crosshair = 13;
+    string style = 14;
+    repeated string tags = 15;
+    Templating templating = 16;
+    Time time = 17;
+    TimePicker time_picker = 18;
+    string timezone = 19;
+    uint32 version = 20;
+    string uid = 21;
+}
+
+message Row {
+    repeated Panel panels = 1;
+    bool collapse = 2;
+    bool editable = 3;
+    string height = 4;
+    bool show_title = 5;
+    string title = 6;
+    string repeat = 7;
+}
+
+message Annotations {
+    repeated string list = 1;
+}

@@ -9,7 +9,12 @@ PAYMENT_SERVICE = Service(
     Charges the given credit card info (mock) with the given amount and returns a transaction ID.
     """,
     owner=Owner(group=DUMMY_GROUP),
-    versions=[Service.WeightedVersion(version=Version(major=1, minor=12), weight=90)],
+    versions=[
+        Service.WeightedVersion(
+            version=Version(major=0, minor=1, patch=4, prerelease="31-gc4d8670"),
+            weight=90,
+        )
+    ],
     slos=[
         Service.SLO(
             error_rate=Service.SLO.ErrorRateSLO(

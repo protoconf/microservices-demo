@@ -16,7 +16,11 @@ CHECKOUT_SERVICE = Service(
     Retrieves user cart, prepares order and orchestrates the payment, shipping and the email notification.
     """,
     owner=Owner(group=DUMMY_GROUP),
-    versions=[Service.WeightedVersion(version=Version(major=1, minor=12), weight=90)],
+    versions=[
+        Service.WeightedVersion(
+            version=Version(major=0, minor=1, patch=4, prerelease="31-gc4d8670")
+        )
+    ],
     downstreams=[
         CART_SERVICE,
         CURRENCY_SERVICE,

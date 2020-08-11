@@ -1,0 +1,8 @@
+load("//services/services.proto", "Service", "Artifact")
+
+
+def service_have_artifact(c):
+    pass
+
+
+add_validator(Service, service_have_artifact)

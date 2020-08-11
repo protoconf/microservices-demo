@@ -1,0 +1,69 @@
+"""
+nomad jobs
+"""
+load(
+    "//executor/exec_config.proto",
+    "Config",
+    "WatcherConfig",
+    "Action",
+    "ActionTypeHttp",
+    "ActionTypeWriteToFile",
+)
+load("/nomad/v0.11.1/api.proto", "RegisterJobRequest")
+load("/nomad/v0.11.1/api.pinc", "NOMAD_PROTO")
+load("../protoconf_exec_task.pinc", "ProtoconfExecTask")
+load("job.pinc", "NewJob")
+
+
+def JobRegistry(
+    executor_name="jobs-executor",
+    config_root="jobs/jobs",
+    cluster_address="https://127.0.0.1:4646",
+):
+    """
+    JobRegistry
+
+    Args:
+        executor_name: the name of the task that executes the jobs (must be globally uniq)
+        config_root: the basedir of the mpconf file initiates the JobRegistry instance
+        cluster_address: the address of the nomad cluster
+    Returns:
+        A struct contains the output for mpconf and the register_job function
+    """
+    executor = Config(items=[])
+
+    output = {"apply": executor}
+
+    def register_job(job):
+        output[job.ID] = RegisterJobRequest(Job=job)
+        e = WatcherConfig(
+            path="/".join([config_root, job.ID]),
+            proto_file="nomad/v0.11.1/api.proto",
+            actions=[
+                Action(
+                    http=ActionTypeHttp(uri=cluster_address + "/v1/jobs", method="POST")
+                ),
+                # Action(
+                #     file=ActionTypeWriteToFile(
+                #         path="/local/{}.json".format(job.ID),
+                #         serializer=Config.Serializer.JSON,
+                #     )
+                # ),
+            ],
+        )
+        executor.items.append(e)
+
+    def newJob(*args, **kwargs):
+        j = NewJob(*args, **kwargs)
+        register_job(j.job)
+        return j
+
+    executor_job = NewJob(executor_name)
+    executor_job.AddTask(
+        ProtoconfExecTask(
+            "/".join([config_root, "apply"]), {"nomad/v0.11.1/api.proto": NOMAD_PROTO}
+        )
+    )
+    register_job(executor_job.job)
+
+    return struct(output=output, register_job=register_job, NewJob=newJob)

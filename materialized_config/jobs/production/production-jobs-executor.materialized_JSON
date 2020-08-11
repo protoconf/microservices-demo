@@ -1,0 +1,56 @@
+{
+  "protoFile": "nomad/v0.11.1/api.proto",
+  "value": {
+    "@type": "type.googleapis.com/api.RegisterJobRequest",
+    "Job": {
+      "Region": "global",
+      "ID": "production-jobs-executor",
+      "Name": "production-jobs-executor",
+      "Type": "service",
+      "Priority": 75,
+      "Datacenters": [
+        "dc1"
+      ],
+      "TaskGroups": [
+        {
+          "Name": "default",
+          "Count": 1,
+          "Tasks": [
+            {
+              "Name": "protoconf-exec",
+              "Driver": "docker",
+              "Config": {
+                "args": [
+                  "exec",
+                  "-config=jobs/production/apply",
+                  "-proto_dir=/local"
+                ],
+                "dns_options": [
+                  "169.254.1.1"
+                ],
+                "image": "protoconf/protoconf:0.1.1-b5da114c51b921c68d116211842da1f9d292fcb5",
+                "network_mode": "host",
+                "volumes": [
+                  "/etc/ssl:/etc/ssl"
+                ]
+              },
+              "Resources": {
+                "CPU": 1000,
+                "MemoryMB": 64,
+                "Networks": [
+                  {}
+                ]
+              },
+              "Templates": [
+                {
+                  "DestPath": "local/nomad/v0.11.1/api.proto",
+                  "EmbeddedTmpl": "syntax = \"proto3\";\n\npackage api;\n\nimport \"google/protobuf/duration.proto\";\n\nimport \"google/protobuf/struct.proto\";\n\noption go_package = \"github.com/hashicorp/nomad/api\";\n\nmessage RegisterJobRequest {\n  Job Job = 1;\n\n  bool EnforceIndex = 2;\n\n  uint64 JobModifyIndex = 3;\n\n  bool PolicyOverride = 4;\n}\n\nmessage Job {\n  bool Stop = 1;\n\n  string Region = 2;\n\n  string Namespace = 3;\n\n  string ID = 4;\n\n  string ParentID = 5;\n\n  string Name = 6;\n\n  string Type = 7;\n\n  int32 Priority = 8;\n\n  bool AllAtOnce = 9;\n\n  repeated string Datacenters = 10;\n\n  repeated Constraint Constraints = 11;\n\n  repeated Affinity Affinities = 12;\n\n  repeated TaskGroup TaskGroups = 13;\n\n  UpdateStrategy Update = 14;\n\n  repeated Spread Spreads = 15;\n\n  PeriodicConfig Periodic = 16;\n\n  ParameterizedJobConfig ParameterizedJob = 17;\n\n  bool Dispatched = 18;\n\n  repeated bytes Payload = 19;\n\n  ReschedulePolicy Reschedule = 20;\n\n  MigrateStrategy Migrate = 21;\n\n  map\u003cstring, string\u003e Meta = 22;\n\n  string ConsulToken = 23;\n\n  string VaultToken = 24;\n\n  string Status = 25;\n\n  string StatusDescription = 26;\n\n  bool Stable = 27;\n\n  uint64 Version = 28;\n\n  int64 SubmitTime = 29;\n\n  uint64 CreateIndex = 30;\n\n  uint64 ModifyIndex = 31;\n\n  uint64 JobModifyIndex = 32;\n}\n\nmessage Constraint {\n  string LTarget = 1;\n\n  string RTarget = 2;\n\n  string Operand = 3;\n}\n\nmessage Affinity {\n  string LTarget = 1;\n\n  string RTarget = 2;\n\n  string Operand = 3;\n\n  int32 Weight = 4;\n}\n\nmessage TaskGroup {\n  string Name = 1;\n\n  int32 Count = 2;\n\n  repeated Constraint Constraints = 3;\n\n  repeated Affinity Affinities = 4;\n\n  repeated Task Tasks = 5;\n\n  repeated Spread Spreads = 6;\n\n  VolumeRequest Volumes = 7;\n\n  RestartPolicy RestartPolicy = 8;\n\n  ReschedulePolicy ReschedulePolicy = 9;\n\n  EphemeralDisk EphemeralDisk = 10;\n\n  UpdateStrategy Update = 11;\n\n  MigrateStrategy Migrate = 12;\n\n  repeated NetworkResource Networks = 13;\n\n  map\u003cstring, string\u003e Meta = 14;\n\n  repeated Service Services = 15;\n\n  google.protobuf.Duration ShutdownDelay = 16;\n\n  ScalingPolicy Scaling = 17;\n}\n\nmessage Task {\n  string Name = 1;\n\n  string Driver = 2;\n\n  string User = 3;\n\n  TaskLifecycle Lifecycle = 4;\n\n  map\u003cstring, google.protobuf.Value\u003e Config = 5;\n\n  repeated Constraint Constraints = 6;\n\n  repeated Affinity Affinities = 7;\n\n  map\u003cstring, string\u003e Env = 8;\n\n  repeated Service Services = 9;\n\n  Resources Resources = 10;\n\n  RestartPolicy RestartPolicy = 11;\n\n  map\u003cstring, string\u003e Meta = 12;\n\n  google.protobuf.Duration KillTimeout = 13;\n\n  LogConfig LogConfig = 14;\n\n  repeated TaskArtifact Artifacts = 15;\n\n  Vault Vault = 16;\n\n  repeated Template Templates = 17;\n\n  DispatchPayloadConfig DispatchPayload = 18;\n\n  repeated VolumeMount VolumeMounts = 19;\n\n  TaskCSIPluginConfig CSIPluginConfig = 20;\n\n  bool Leader = 21;\n\n  int64 ShutdownDelay = 22;\n\n  string KillSignal = 23;\n\n  string Kind = 24;\n}\n\nmessage TaskLifecycle {\n  string Hook = 1;\n\n  bool Sidecar = 2;\n}\n\nmessage Service {\n  string Id = 1;\n\n  string Name = 2;\n\n  repeated string Tags = 3;\n\n  repeated string CanaryTags = 4;\n\n  bool EnableTagOverride = 5;\n\n  string PortLabel = 6;\n\n  string AddressMode = 7;\n\n  repeated ServiceCheck Checks = 8;\n\n  CheckRestart CheckRestart = 9;\n\n  ConsulConnect Connect = 10;\n\n  map\u003cstring, string\u003e Meta = 11;\n\n  map\u003cstring, string\u003e CanaryMeta = 12;\n}\n\nmessage ServiceCheck {\n  string Id = 1;\n\n  string Name = 2;\n\n  string Type = 3;\n\n  string Command = 4;\n\n  repeated string Args = 5;\n\n  string Path = 6;\n\n  string Protocol = 7;\n\n  string PortLabel = 8;\n\n  bool Expose = 9;\n\n  string AddressMode = 10;\n\n  int64 Interval = 11;\n\n  int64 Timeout = 12;\n\n  string InitialStatus = 13;\n\n  bool TLSSkipVerify = 14;\n\n  repeated string Header = 15;\n\n  string Method = 16;\n\n  CheckRestart CheckRestart = 17;\n\n  string GRPCService = 18;\n\n  bool GRPCUseTLS = 19;\n\n  string TaskName = 20;\n}\n\nmessage CheckRestart {\n  int32 Limit = 1;\n\n  google.protobuf.Duration Grace = 2;\n\n  bool IgnoreWarnings = 3;\n}\n\nmessage ConsulConnect {\n  bool Native = 1;\n\n  ConsulSidecarService SidecarService = 2;\n\n  SidecarTask SidecarTask = 3;\n}\n\nmessage ConsulSidecarService {\n  repeated string Tags = 1;\n\n  string Port = 2;\n\n  ConsulProxy Proxy = 3;\n}\n\nmessage ConsulProxy {\n  string LocalServiceAddress = 1;\n\n  int32 LocalServicePort = 2;\n\n  ConsulExposeConfig ExposeConfig = 3;\n\n  repeated ConsulUpstream Upstreams = 4;\n\n  map\u003cstring, google.protobuf.Value\u003e Config = 5;\n}\n\nmessage ConsulExposeConfig {\n  repeated ConsulExposePath Path = 1;\n}\n\nmessage ConsulExposePath {\n  string Path = 1;\n\n  string Protocol = 2;\n\n  int32 LocalPathPort = 3;\n\n  string ListenerPort = 4;\n}\n\nmessage ConsulUpstream {\n  string DestinationName = 1;\n\n  int32 LocalBindPort = 2;\n}\n\nmessage SidecarTask {\n  string Name = 1;\n\n  string Driver = 2;\n\n  string User = 3;\n\n  map\u003cstring, google.protobuf.Value\u003e Config = 4;\n\n  map\u003cstring, string\u003e Env = 5;\n\n  Resources Resources = 6;\n\n  map\u003cstring, string\u003e Meta = 7;\n\n  google.protobuf.Duration KillTimeout = 8;\n\n  LogConfig LogConfig = 9;\n\n  google.protobuf.Duration ShutdownDelay = 10;\n\n  string KillSignal = 11;\n}\n\nmessage Resources {\n  int32 CPU = 1;\n\n  int32 MemoryMB = 2;\n\n  int32 DiskMB = 3;\n\n  repeated NetworkResource Networks = 4;\n\n  repeated RequestedDevice Devices = 5;\n\n  int32 IOPS = 6;\n}\n\nmessage NetworkResource {\n  string Mode = 1;\n\n  string Device = 2;\n\n  string CIDR = 3;\n\n  string IP = 4;\n\n  int32 MBits = 5;\n\n  repeated Port ReservedPorts = 6;\n\n  repeated Port DynamicPorts = 7;\n}\n\nmessage Port {\n  string Label = 1;\n\n  int32 Value = 2;\n\n  int32 To = 3;\n}\n\nmessage RequestedDevice {\n  string Name = 1;\n\n  uint64 Count = 2;\n\n  repeated Constraint Constraints = 3;\n\n  repeated Affinity Affinities = 4;\n}\n\nmessage LogConfig {\n  int32 MaxFiles = 1;\n\n  int32 MaxFileSizeMB = 2;\n}\n\nmessage RestartPolicy {\n  google.protobuf.Duration Interval = 1;\n\n  int32 Attempts = 2;\n\n  google.protobuf.Duration Delay = 3;\n\n  string Mode = 4;\n}\n\nmessage TaskArtifact {\n  string GetterSource = 1;\n\n  map\u003cstring, string\u003e GetterOptions = 2;\n\n  string GetterMode = 3;\n\n  string RelativeDest = 4;\n}\n\nmessage Vault {\n  repeated string Policies = 1;\n\n  bool Env = 2;\n\n  string ChangeMode = 3;\n\n  string ChangeSignal = 4;\n}\n\nmessage Template {\n  string SourcePath = 1;\n\n  string DestPath = 2;\n\n  string EmbeddedTmpl = 3;\n\n  string ChangeMode = 4;\n\n  string ChangeSignal = 5;\n\n  google.protobuf.Duration Splay = 6;\n\n  string Perms = 7;\n\n  string LeftDelim = 8;\n\n  string RightDelim = 9;\n\n  bool Envvars = 10;\n\n  google.protobuf.Duration VaultGrace = 11;\n}\n\nmessage DispatchPayloadConfig {\n  string File = 1;\n}\n\nmessage VolumeMount {\n  string Volume = 1;\n\n  string Destination = 2;\n\n  bool ReadOnly = 3;\n\n  string PropagationMode = 4;\n}\n\nmessage TaskCSIPluginConfig {\n  string ID = 1;\n\n  string Type = 2;\n\n  string MountDir = 3;\n}\n\nmessage Spread {\n  string Attribute = 1;\n\n  int32 Weight = 2;\n\n  repeated SpreadTarget SpreadTarget = 3;\n}\n\nmessage SpreadTarget {\n  string Value = 1;\n\n  uint32 Percent = 2;\n}\n\nmessage VolumeRequest {\n  string Name = 1;\n\n  string Type = 2;\n\n  string Source = 3;\n\n  bool ReadOnly = 4;\n\n  CSIMountOptions MountOptions = 5;\n\n  repeated string ExtraKeysHCL = 6;\n}\n\nmessage CSIMountOptions {\n  string FSType = 1;\n\n  repeated string MountFlags = 2;\n\n  repeated string ExtraKeysHCL = 3;\n}\n\nmessage ReschedulePolicy {\n  int32 Attempts = 1;\n\n  google.protobuf.Duration Interval = 2;\n\n  google.protobuf.Duration Delay = 3;\n\n  string DelayFunction = 4;\n\n  google.protobuf.Duration MaxDelay = 5;\n\n  bool Unlimited = 6;\n}\n\nmessage EphemeralDisk {\n  bool Sticky = 1;\n\n  bool Migrate = 2;\n\n  int32 SizeMB = 3;\n}\n\nmessage UpdateStrategy {\n  google.protobuf.Duration Stagger = 1;\n\n  int32 MaxParallel = 2;\n\n  string HealthCheck = 3;\n\n  google.protobuf.Duration MinHealthyTime = 4;\n\n  google.protobuf.Duration HealthyDeadline = 5;\n\n  google.protobuf.Duration ProgressDeadline = 6;\n\n  int32 Canary = 7;\n\n  bool AutoRevert = 8;\n\n  bool AutoPromote = 9;\n}\n\nmessage MigrateStrategy {\n  int32 MaxParallel = 1;\n\n  string HealthCheck = 2;\n\n  google.protobuf.Duration MinHealthyTime = 3;\n\n  google.protobuf.Duration HealthyDeadline = 4;\n}\n\nmessage ScalingPolicy {\n  string ID = 1;\n\n  string Namespace = 2;\n\n  map\u003cstring, string\u003e Target = 3;\n\n  int64 Min = 4;\n\n  int64 Max = 5;\n\n  map\u003cstring, google.protobuf.Value\u003e Policy = 6;\n\n  bool Enabled = 7;\n\n  uint64 CreateIndex = 8;\n\n  uint64 ModifyIndex = 9;\n}\n\nmessage PeriodicConfig {\n  bool Enabled = 1;\n\n  string Spec = 2;\n\n  string SpecType = 3;\n\n  bool ProhibitOverlap = 4;\n\n  string TimeZone = 5;\n}\n\nmessage ParameterizedJobConfig {\n  string Payload = 1;\n\n  repeated string MetaRequired = 2;\n\n  repeated string MetaOptional = 3;\n}\n"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

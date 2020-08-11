@@ -1,0 +1,100 @@
+"""
+utils for protoconf based nomad jobs
+"""
+load("/nomad/v0.11.1/api.proto", "Template", "ServiceCheck")
+load("helpers/job.pinc", "NewJob")
+load("consts.pinc", PROTOCONF_VERSION="PROTOCONF_V_VERSION")
+
+
+PROTOCONF_AGENT_JOB = NewJob("protoconf-agent", type="system")
+task = PROTOCONF_AGENT_JOB.NewTask("protoconf-agent")
+task.SetImage("protoconf/agent:" + PROTOCONF_VERSION)
+task.NewPort("agent", reserve=4300)
+task.SetConfig("network_mode", "host")
+task.SetConfig("volumes", ["/etc/ssl:/etc/ssl"])
+task.SetConfig(
+    "args",
+    ["-store=consul", "-store-address=https://169.254.1.1:8501", "-prefix=production/"],
+)
+task.SetCPU(1000)
+task.SetMemory(1024)
+
+PROTOCONF_SERVER_SCRIPT_HEADER = """\
+#!/bin/bash
+set -e
+set -x
+
+PROTOCONF_ROOT="/local/protocorp"
+
+git config --global credential.helper "store --file=/local/github-creds"
+"""
+
+PROTOCONF_SERVER_PRE_SH = (
+    PROTOCONF_SERVER_SCRIPT_HEADER
+    + """\
+mkdir -p ${PROTOCONF_ROOT}
+git clone https://github.com/smintz/protocorp.git ${PROTOCONF_ROOT} || git -C ${PROTOCONF_ROOT} fetch -a
+git -C "${PROTOCONF_ROOT}" reset --hard origin/master
+"""
+)
+
+PROTOCONF_SERVER_POST_SH = (
+    PROTOCONF_SERVER_SCRIPT_HEADER
+    + """\
+USER=$(echo -n $1 | cut -d: -f1)
+USER=${USER:-smintz}
+SUBJECT=$(echo -n $1 | cut -d: -f2-)
+SUBJECT=${SUBJECT:-Mutated with API}
+
+git config --global user.name "$USER"
+git config --global user.email "$USER@protoconf.com"
+cd ${PROTOCONF_ROOT}
+make
+git -C "${PROTOCONF_ROOT}" add ${PROTOCONF_ROOT}
+
+
+git -C "${PROTOCONF_ROOT}" commit -m "${SUBJECT}"
+git -C "${PROTOCONF_ROOT}" push
+"""
+)
+
+PROTOCONF_SERVER_ENTRYPOINT_SH = (
+    PROTOCONF_SERVER_PRE_SH
+    + """\
+exec protoconf serve -pre=/local/pre.sh -post=/local/post.sh /local/protocorp
+"""
+)
+
+
+PROTOCONF_SERVER_JOB = NewJob("protoconf-server")
+PROTOCONF_SERVER_JOB.SetCount(3)
+mutate = PROTOCONF_SERVER_JOB.NewTask("protoconf-server")
+mutate.task.Templates = [
+    Template(
+        EmbeddedTmpl="""{{with secret "kv/github-creds"}}{{.Data.url}}{{end}}""",
+        DestPath="local/github-creds",
+    ),
+    Template(
+        EmbeddedTmpl=PROTOCONF_SERVER_ENTRYPOINT_SH,
+        DestPath="local/entrypoint.sh",
+        Perms="0755",
+    ),
+    Template(
+        EmbeddedTmpl=PROTOCONF_SERVER_PRE_SH, DestPath="local/pre.sh", Perms="0755"
+    ),
+    Template(
+        EmbeddedTmpl=PROTOCONF_SERVER_POST_SH, DestPath="local/post.sh", Perms="0755"
+    ),
+]
+mutate.SetImage("smintz/webhook:latest")
+# mutate.SetConfig("network_mode", "host")
+mutate.SetConfig("volumes", ["/etc/ssl:/etc/ssl"])
+mutate.SetConfig("entrypoint", ["/local/entrypoint.sh"])
+mutate.SetMemory(1024)
+mutate.AddVaultPolicies("github-policy")
+mutate.NewService(
+    "mutate",
+    to=4301,
+    checks=[ServiceCheck(Type="tcp", Interval=10 * 1000000000, Timeout=2 * 1000000000)],
+    tags=["grpcprefix-/v1.ProtoconfMutationService/MutateConfig"],
+)

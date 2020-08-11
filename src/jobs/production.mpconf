@@ -1,0 +1,14 @@
+"""
+local jobs
+"""
+load("jobs.pinc", "populate")
+load("helpers/registry.pinc", "JobRegistry")
+
+reg = JobRegistry(
+    "production-jobs-executor", "jobs/production", "http://127.0.0.1:4646"
+)
+populate(reg)
+
+
+def main():
+    return reg.output

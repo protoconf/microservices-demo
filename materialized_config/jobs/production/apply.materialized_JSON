@@ -1,0 +1,128 @@
+{
+  "protoFile": "executor/exec_config.proto",
+  "value": {
+    "@type": "type.googleapis.com/exec_config.Config",
+    "items": [
+      {
+        "path": "jobs/production/production-jobs-executor",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      },
+      {
+        "path": "jobs/production/Frontend",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      },
+      {
+        "path": "jobs/production/AdService",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      },
+      {
+        "path": "jobs/production/CartService",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      },
+      {
+        "path": "jobs/production/CheckoutService",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      },
+      {
+        "path": "jobs/production/CurrencyService",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      },
+      {
+        "path": "jobs/production/PaymentService",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      },
+      {
+        "path": "jobs/production/ProductCatalogService",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      },
+      {
+        "path": "jobs/production/RecommendationService",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      },
+      {
+        "path": "jobs/production/ShippingService",
+        "protoFile": "nomad/v0.11.1/api.proto",
+        "actions": [
+          {
+            "http": {
+              "uri": "http://127.0.0.1:4646/v1/jobs",
+              "method": "POST"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

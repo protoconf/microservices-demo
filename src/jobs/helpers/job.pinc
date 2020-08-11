@@ -1,0 +1,62 @@
+"""
+nomad jobs
+"""
+load("/nomad/v0.11.1/api.proto", "Job", "TaskGroup")
+load("task.pinc", "NewTask")
+
+datacenters = ["dc1"]
+
+
+DEFAULT_GROUP_NAME = "default"
+
+
+def NewJob(name, dc=datacenters, region="global", type="service", priority=75):
+    """
+    NewJob is an helper to create new jobs
+
+    Args:
+        name: name of the job
+        dc: list of datacenters names the job should be deployed in
+        region: which nomad cluster to deploy the job in
+        type: what type of job is this (service, system, batch)
+        priority: the priority of the job
+    Returns:
+        A struct of functions
+    """
+    local_job = Job(
+        Name=name, ID=name, Datacenters=dc, Region=region, Type=type, Priority=priority
+    )
+
+    def addTaskGroup(taskGroupName=DEFAULT_GROUP_NAME):
+        local_group = TaskGroup(Name=taskGroupName, Tasks=[], Count=1)
+        local_job.TaskGroups.append(local_group)
+        return local_group
+
+    def getOrCreateTaskGroup(group=DEFAULT_GROUP_NAME):
+        arr = [g for g in local_job.TaskGroups if g.Name == group]
+        if len(arr) < 1:
+            return addTaskGroup(group)
+        else:
+            return arr[0]
+
+    def setCount(num, groupName=DEFAULT_GROUP_NAME):
+        group = getOrCreateTaskGroup(groupName)
+        group.Count = num
+
+    def addTask(task, groupName=DEFAULT_GROUP_NAME):
+        group = getOrCreateTaskGroup(groupName)
+        group.Tasks.append(task)
+
+    def newTask(name, groupName=DEFAULT_GROUP_NAME):
+        task = NewTask(name)
+        addTask(task.task, groupName)
+        return task
+
+    return struct(
+        job=local_job,
+        AddTaskGroup=addTaskGroup,
+        getOrCreateTaskGroup=getOrCreateTaskGroup,
+        SetCount=setCount,
+        AddTask=addTask,
+        NewTask=newTask,
+    )

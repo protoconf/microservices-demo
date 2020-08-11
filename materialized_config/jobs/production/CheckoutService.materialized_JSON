@@ -1,0 +1,49 @@
+{
+  "protoFile": "nomad/v0.11.1/api.proto",
+  "value": {
+    "@type": "type.googleapis.com/api.RegisterJobRequest",
+    "Job": {
+      "Region": "global",
+      "ID": "CheckoutService",
+      "Name": "CheckoutService",
+      "Type": "service",
+      "Priority": 75,
+      "Datacenters": [
+        "dc1"
+      ],
+      "TaskGroups": [
+        {
+          "Name": "v0.1.4-31-gc4d8670",
+          "Count": 1,
+          "Tasks": [
+            {
+              "Name": "CheckoutService-v0.1.4-31-gc4d8670",
+              "Driver": "docker",
+              "Config": {
+                "dns_options": [
+                  "169.254.1.1"
+                ],
+                "image": "smintz/checkoutservice:v0.1.4-31-gc4d8670"
+              },
+              "Env": {
+                "CART_SERVICE_ADDR": "localhost:10000",
+                "CURRENCY_SERVICE_ADDR": "localhost:10000",
+                "EMAIL_SERVICE_ADDR": "localhost:10000",
+                "PAYMENT_SERVICE_ADDR": "localhost:10000",
+                "PRODUCT_CATALOG_SERVICE_ADDR": "localhost:10000",
+                "SHIPPING_SERVICE_ADDR": "localhost:10000"
+              },
+              "Resources": {
+                "CPU": 100,
+                "MemoryMB": 64,
+                "Networks": [
+                  {}
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

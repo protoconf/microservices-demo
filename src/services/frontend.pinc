@@ -5,8 +5,10 @@ load("//groups/dummy_group.pinc", "DUMMY_GROUP")
 load("//services/adservice.pinc", "AD_SERVICE")
 load("//services/cartservice.pinc", "CART_SERVICE")
 load("//services/checkoutservice.pinc", "CHECKOUT_SERVICE")
+load("//services/currencyservice.pinc", "CURRENCY_SERVICE")
 load("//services/productcatalogservice.pinc", "PRODUCT_CATALOG_SERVICE")
 load("//services/recommendationservice.pinc", "RECOMMENDATION_SERVICE")
+load("//services/shippingservice.pinc", "SHIPPING_SERVICE")
 
 
 FRONTEND = Service(
@@ -15,13 +17,20 @@ FRONTEND = Service(
     Exposes an HTTP server to serve the website. Does not require signup/login and generates session IDs for all users automatically.
     """,
     owner=Owner(group=DUMMY_GROUP),
-    versions=[Service.WeightedVersion(version=Version(major=1, minor=12), weight=90)],
+    versions=[
+        Service.WeightedVersion(
+            version=Version(major=0, minor=1, patch=4, prerelease="31-gc4d8670"),
+            weight=90,
+        )
+    ],
     downstreams=[
         AD_SERVICE,
         CART_SERVICE,
         CHECKOUT_SERVICE,
+        CURRENCY_SERVICE,
         PRODUCT_CATALOG_SERVICE,
         RECOMMENDATION_SERVICE,
+        SHIPPING_SERVICE,
     ],
     slos=[
         Service.SLO(

@@ -1,0 +1,34 @@
+"""
+jobs registry
+"""
+load("//jobs/helpers/job.pinc", "NewJob")
+load("//services/registry.pinc", svcs="reg")
+load("re.star", "re")
+
+
+def version(v):
+    result = "v%d.%d.%d" % (v.major, v.minor, v.patch)
+    if v.prerelease:
+        result = result + "-" + v.prerelease
+    return result
+
+
+def generate_job_for_service(svc):
+    job = NewJob(svc.name)
+    artifact = svc.name.lower()
+
+    for ver in svc.versions:
+        v = version(ver.version)
+        task = job.NewTask(svc.name + "-" + v, v)
+        task.SetImage("smintz/" + artifact + ":" + v)
+        task.task.Env = {}
+        for s in svc.downstreams:
+            envName = re.sub("([a-z0-9])([A-Z])", "${1}_${2}", s.name).upper() + "_ADDR"
+            task.task.Env[envName] = "localhost:10000"
+
+    return job
+
+
+def populate(reg):
+    for s in svcs.services:
+        reg.register_job(generate_job_for_service(s).job)

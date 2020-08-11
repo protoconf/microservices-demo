@@ -6,7 +6,7 @@
     "downstreams": [
       {
         "name": "AdService",
-        "description": "\n    Provides text ads based on given context words.\n    ",
+        "description": "Provides text ads based on given context words.",
         "owner": {
           "group": {
             "name": "dummy",
@@ -24,11 +24,15 @@
             }
           }
         ],
+        "artifact": {
+          "name": "adservice"
+        },
         "versions": [
           {
             "version": {
-              "major": 1,
-              "minor": 12
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
             },
             "weight": 90
           }
@@ -57,8 +61,9 @@
         "versions": [
           {
             "version": {
-              "major": 1,
-              "minor": 12
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
             },
             "weight": 90
           }
@@ -108,8 +113,9 @@
             "versions": [
               {
                 "version": {
-                  "major": 1,
-                  "minor": 12
+                  "minor": 1,
+                  "patch": 4,
+                  "prerelease": "31-gc4d8670"
                 },
                 "weight": 90
               }
@@ -138,8 +144,9 @@
             "versions": [
               {
                 "version": {
-                  "major": 1,
-                  "minor": 12
+                  "minor": 1,
+                  "patch": 4,
+                  "prerelease": "31-gc4d8670"
                 },
                 "weight": 90
               }
@@ -168,8 +175,9 @@
             "versions": [
               {
                 "version": {
-                  "major": 1,
-                  "minor": 12
+                  "minor": 1,
+                  "patch": 4,
+                  "prerelease": "31-gc4d8670"
                 },
                 "weight": 90
               }
@@ -198,8 +206,9 @@
             "versions": [
               {
                 "version": {
-                  "major": 1,
-                  "minor": 12
+                  "minor": 1,
+                  "patch": 4,
+                  "prerelease": "31-gc4d8670"
                 },
                 "weight": 90
               }
@@ -228,8 +237,9 @@
             "versions": [
               {
                 "version": {
-                  "major": 1,
-                  "minor": 12
+                  "minor": 1,
+                  "patch": 4,
+                  "prerelease": "31-gc4d8670"
                 },
                 "weight": 90
               }
@@ -258,8 +268,9 @@
             "versions": [
               {
                 "version": {
-                  "major": 1,
-                  "minor": 12
+                  "minor": 1,
+                  "patch": 4,
+                  "prerelease": "31-gc4d8670"
                 },
                 "weight": 90
               }
@@ -269,8 +280,39 @@
         "versions": [
           {
             "version": {
-              "major": 1,
-              "minor": 12
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            }
+          }
+        ]
+      },
+      {
+        "name": "CurrencyService",
+        "description": "\n    Converts one money amount to another currency. Uses real values fetched from European Central Bank. It's the highest QPS service.\n    ",
+        "owner": {
+          "group": {
+            "name": "dummy",
+            "oncall": "dummy",
+            "slackChannel": "#dummy-group"
+          }
+        },
+        "slos": [
+          {
+            "errorRate": {
+              "meta": {
+                "name": "dummy_error_rate",
+                "below": 0.01
+              }
+            }
+          }
+        ],
+        "versions": [
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
             },
             "weight": 90
           }
@@ -299,8 +341,9 @@
         "versions": [
           {
             "version": {
-              "major": 1,
-              "minor": 12
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
             },
             "weight": 90
           }
@@ -350,8 +393,9 @@
             "versions": [
               {
                 "version": {
-                  "major": 1,
-                  "minor": 12
+                  "minor": 1,
+                  "patch": 4,
+                  "prerelease": "31-gc4d8670"
                 },
                 "weight": 90
               }
@@ -361,8 +405,40 @@
         "versions": [
           {
             "version": {
-              "major": 1,
-              "minor": 12
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 90
+          }
+        ]
+      },
+      {
+        "name": "ShippingService",
+        "description": "\n    Gives shipping cost estimates based on the shopping cart. Ships items to the given address (mock)\n    ",
+        "owner": {
+          "group": {
+            "name": "dummy",
+            "oncall": "dummy",
+            "slackChannel": "#dummy-group"
+          }
+        },
+        "slos": [
+          {
+            "errorRate": {
+              "meta": {
+                "name": "dummy_error_rate",
+                "below": 0.01
+              }
+            }
+          }
+        ],
+        "versions": [
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
             },
             "weight": 90
           }
@@ -390,8 +466,9 @@
     "versions": [
       {
         "version": {
-          "major": 1,
-          "minor": 12
+          "minor": 1,
+          "patch": 4,
+          "prerelease": "31-gc4d8670"
         },
         "weight": 90
       }

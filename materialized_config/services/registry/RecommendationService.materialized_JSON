@@ -27,8 +27,9 @@
         "versions": [
           {
             "version": {
-              "major": 1,
-              "minor": 12
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
             },
             "weight": 90
           }
@@ -56,8 +57,9 @@
     "versions": [
       {
         "version": {
-          "major": 1,
-          "minor": 12
+          "minor": 1,
+          "patch": 4,
+          "prerelease": "31-gc4d8670"
         },
         "weight": 90
       }

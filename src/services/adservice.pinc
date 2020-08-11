@@ -1,15 +1,21 @@
-load("//services/services.proto", "Service", "Version")
+load("//services/services.proto", "Service", "Artifact", "Version")
 load("//ownership/ownership.proto", "Owner")
 load("//groups/dummy_group.pinc", "DUMMY_GROUP")
 
 
 AD_SERVICE = Service(
     name="AdService",
-    description="""
+    description="""\
     Provides text ads based on given context words.
-    """,
+    """.strip(),
     owner=Owner(group=DUMMY_GROUP),
-    versions=[Service.WeightedVersion(version=Version(major=1, minor=12), weight=90)],
+    artifact=Artifact(name="adservice"),
+    versions=[
+        Service.WeightedVersion(
+            version=Version(major=0, minor=1, patch=4, prerelease="31-gc4d8670"),
+            weight=90,
+        )
+    ],
     slos=[
         Service.SLO(
             error_rate=Service.SLO.ErrorRateSLO(
