@@ -1,3 +1,6 @@
+"""
+Defines the CHECKOUT_SERVICE
+"""
 load("//services/services.proto", "Service", "Version")
 load("//ownership/ownership.proto", "Owner")
 load("//groups/dummy_group.pinc", "DUMMY_GROUP")

@@ -7,7 +7,6 @@ load(
     "WatcherConfig",
     "Action",
     "ActionTypeHttp",
-    "ActionTypeWriteToFile",
 )
 load("/nomad/v0.11.1/api.proto", "RegisterJobRequest")
 load("/nomad/v0.11.1/api.pinc", "NOMAD_PROTO")

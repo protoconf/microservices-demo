@@ -1,4 +1,4 @@
-load("//services/services.proto", "Service", "Artifact")
+load("//services/services.proto", "Service")
 
 
 def service_have_artifact(c):

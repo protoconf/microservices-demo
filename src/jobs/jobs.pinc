@@ -14,6 +14,14 @@ def version(v):
 
 
 def generate_job_for_service(svc):
+    """
+    generate_job_for_service takes a defined service and creates a job for nomad to run it.
+
+    Args:
+        svc: a Service 
+    Returns:
+        a job
+    """
     job = NewJob(svc.name)
     artifact = svc.name.lower()
 
@@ -23,8 +31,10 @@ def generate_job_for_service(svc):
         task.SetImage("smintz/" + artifact + ":" + v)
         task.task.Env = {}
         for s in svc.downstreams:
-            envName = re.sub("([a-z0-9])([A-Z])", "${1}_${2}", s.name).upper() + "_ADDR"
-            task.task.Env[envName] = "localhost:10000"
+            env_name = (
+                re.sub("([a-z0-9])([A-Z])", "${1}_${2}", s.name).upper() + "_ADDR"
+            )
+            task.task.Env[env_name] = "localhost:10000"
 
     return job
 
