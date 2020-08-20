@@ -2,22 +2,14 @@
   "protoFile": "envoy/config/bootstrap/v2/bootstrap.proto",
   "value": {
     "@type": "type.googleapis.com/envoy.config.bootstrap.v2.Bootstrap",
-    "admin": {
-      "accessLogPath": "/dev/stdout",
-      "address": {
-        "socketAddress": {
-          "address": "0.0.0.0",
-          "portValue": 8881
-        }
-      }
-    },
     "staticResources": {
       "listeners": [
         {
+          "name": "forwarder",
           "address": {
             "socketAddress": {
               "address": "0.0.0.0",
-              "portValue": 10000
+              "portValue": 11000
             }
           },
           "filterChains": [
@@ -27,6 +19,15 @@
                   "name": "envoy.filters.network.http_connection_manager",
                   "typedConfig": {
                     "@type": "type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager",
+                    "accessLog": [
+                      {
+                        "name": "envoy.access_loggers.file",
+                        "typedConfig": {
+                          "@type": "type.googleapis.com/envoy.config.accesslog.v2.FileAccessLog",
+                          "path": "/dev/stdout"
+                        }
+                      }
+                    ],
                     "routeConfig": {
                       "name": "productcatalogservice_route"
                     },
@@ -36,19 +37,6 @@
               ]
             }
           ]
-        }
-      ],
-      "clusters": [
-        {
-          "name": "local_service",
-          "type": "STRICT_DNS",
-          "connectTimeout": "0.250s",
-          "loadAssignment": {
-            "clusterName": "local_service",
-            "endpoints": [
-              {}
-            ]
-          }
         }
       ]
     }

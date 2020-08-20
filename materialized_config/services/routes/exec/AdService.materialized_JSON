@@ -9,25 +9,9 @@
         "actions": [
           {
             "file": {
-              "path": "/tmp/AdService.json",
+              "path": "/alloc/data/AdService.json",
               "serializer": "JSON"
-            },
-            "then": [
-              {
-                "file": {
-                  "path": "/tmp/AdService.pb",
-                  "serializer": "PB"
-                }
-              }
-            ],
-            "onError": [
-              {
-                "file": {
-                  "path": "/tmp/AdService.yaml",
-                  "serializer": "YAML"
-                }
-              }
-            ]
+            }
           }
         ]
       }

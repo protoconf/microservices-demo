@@ -14,46 +14,75 @@
       "TaskGroups": [
         {
           "Name": "v0.1.4-31-gc4d8670",
-          "Count": 1,
+          "Count": 2,
           "Tasks": [
             {
-              "Name": "recommendationservice-v0.1.4-31-gc4d8670",
+              "Name": "server",
               "Driver": "docker",
               "Config": {
                 "dns_options": [
                   "169.254.1.1"
                 ],
-                "image": "smintz/recommendationservice:v0.1.4-31-gc4d8670"
+                "image": "smintz/recommendationservice:v0.1.4-31-gc4d8670",
+                "port_map": [
+                  {
+                    "server": 18080
+                  }
+                ]
               },
               "Env": {
-                "PRODUCT_CATALOG_SERVICE_ADDR": "envoy:10000"
+                "LISTEN_ADDR": "0.0.0.0",
+                "PORT": "18080",
+                "http_proxy": "${NOMAD_ADDR_envoy_forwarder}"
               },
               "Resources": {
                 "CPU": 100,
-                "MemoryMB": 64,
+                "MemoryMB": 128,
                 "Networks": [
-                  {}
+                  {
+                    "Mode": "bridge",
+                    "DynamicPorts": [
+                      {
+                        "Label": "server",
+                        "To": 18080
+                      }
+                    ]
+                  }
                 ]
               }
             },
             {
-              "Name": "recommendationservice-envoy",
+              "Name": "envoy",
               "Driver": "docker",
               "Config": {
+                "args": [
+                  "-c /alloc/data/RecommendationService.json",
+                  "--config-yaml",
+                  "static_resources:\n  listeners:\n  - address:\n      socket_address:\n        address: 0.0.0.0\n        port_value: 10000\n    filter_chains:\n    - filters:\n      - name: envoy.filters.network.http_connection_manager\n        typed_config:\n          \"@type\": type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager\n          codec_type: auto\n          stat_prefix: ingress_http\n          access_log:\n          - name: envoy.access_loggers.file\n            typed_config:\n              \"@type\": type.googleapis.com/envoy.config.accesslog.v2.FileAccessLog\n              path: \"/dev/stdout\"\n          route_config:\n            name: local_route\n            virtual_hosts:\n            - name: backend\n              domains:\n              - \"*\"\n              routes:\n              - match:\n                  prefix: \"/\"\n                route:\n                  cluster: local\n          http_filters:\n          - name: envoy.filters.http.router\n            typed_config: {}\n  clusters:\n  - name: local\n    connect_timeout: 0.250s\n    type: strict_dns\n    lb_policy: round_robin\n    load_assignment:\n      cluster_name: local\n      endpoints:\n      - lb_endpoints:\n        - endpoint:\n            address:\n              socket_address:\n                address: \"${NOMAD_IP_server_server}\"\n                port_value: ${NOMAD_PORT_server_server}\n\nadmin:\n  access_log_path: \"/tmp/admin_access.log\"\n  address:\n    socket_address:\n      address: 0.0.0.0\n      port_value: 8881\n"
+                ],
                 "dns_options": [
                   "169.254.1.1"
                 ],
                 "image": "envoyproxy/envoy:v1.15.0",
                 "port_map": [
                   {
-                    "recommendationservice-envoy-admin": 9901
+                    "envoyadmin": 8881
+                  },
+                  {
+                    "ingress": 10000
+                  },
+                  {
+                    "forwarder": 11000
                   }
                 ]
               },
               "Services": [
                 {
                   "Name": "recommendationservice-envoy",
-                  "PortLabel": "recommendationservice-envoy",
+                  "Tags": [
+                    "envoy-admin"
+                  ],
+                  "PortLabel": "envoyadmin",
                   "Connect": {
                     "SidecarService": {
                       "Tags": [
@@ -68,8 +97,8 @@
                   }
                 },
                 {
-                  "Name": "recommendationservice-envoy-admin",
-                  "PortLabel": "recommendationservice-envoy-admin",
+                  "Name": "recommendationservice",
+                  "PortLabel": "ingress",
                   "Connect": {
                     "SidecarService": {
                       "Tags": [
@@ -85,24 +114,62 @@
                 }
               ],
               "Resources": {
-                "CPU": 100,
+                "CPU": 500,
                 "MemoryMB": 64,
                 "Networks": [
                   {
                     "Mode": "bridge",
                     "DynamicPorts": [
                       {
-                        "Label": "recommendationservice-envoy",
+                        "Label": "envoyadmin",
+                        "To": 8881
+                      },
+                      {
+                        "Label": "ingress",
                         "To": 10000
                       },
                       {
-                        "Label": "recommendationservice-envoy-admin",
-                        "To": 9901
+                        "Label": "forwarder",
+                        "To": 11000
                       }
                     ]
                   }
                 ]
               }
+            },
+            {
+              "Name": "protoconf-exec",
+              "Driver": "docker",
+              "Config": {
+                "args": [
+                  "exec",
+                  "-config=services/routes/exec/RecommendationService",
+                  "-proto_dir=/local"
+                ],
+                "dns_options": [
+                  "169.254.1.1"
+                ],
+                "image": "protoconf/protoconf:0.1.1-b5da114c51b921c68d116211842da1f9d292fcb5",
+                "network_mode": "host"
+              },
+              "Resources": {
+                "CPU": 1000,
+                "MemoryMB": 64,
+                "Networks": [
+                  {
+                    "Mode": "bridge"
+                  }
+                ]
+              },
+              "Artifacts": [
+                {
+                  "GetterSource": "git::https://github.com/protoconf/microservices-demo//src",
+                  "GetterOptions": {
+                    "depth": "1"
+                  },
+                  "RelativeDest": "/local"
+                }
+              ]
             }
           ]
         }

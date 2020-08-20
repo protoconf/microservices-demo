@@ -12,6 +12,7 @@ import "google/protobuf/struct.proto";
 import "udpa/annotations/migrate.proto";
 import "udpa/annotations/status.proto";
 import "validate/validate.proto";
+import "envoy/config/accesslog/v2/file.proto";
 
 option java_package = "io.envoyproxy.envoy.config.filter.accesslog.v2";
 option java_outer_classname = "AccesslogProto";

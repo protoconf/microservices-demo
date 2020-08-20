@@ -9,25 +9,9 @@
         "actions": [
           {
             "file": {
-              "path": "/tmp/PaymentService.json",
+              "path": "/alloc/data/PaymentService.json",
               "serializer": "JSON"
-            },
-            "then": [
-              {
-                "file": {
-                  "path": "/tmp/PaymentService.pb",
-                  "serializer": "PB"
-                }
-              }
-            ],
-            "onError": [
-              {
-                "file": {
-                  "path": "/tmp/PaymentService.yaml",
-                  "serializer": "YAML"
-                }
-              }
-            ]
+            }
           }
         ]
       }

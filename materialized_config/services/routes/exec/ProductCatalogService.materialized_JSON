@@ -9,25 +9,9 @@
         "actions": [
           {
             "file": {
-              "path": "/tmp/ProductCatalogService.json",
+              "path": "/alloc/data/ProductCatalogService.json",
               "serializer": "JSON"
-            },
-            "then": [
-              {
-                "file": {
-                  "path": "/tmp/ProductCatalogService.pb",
-                  "serializer": "PB"
-                }
-              }
-            ],
-            "onError": [
-              {
-                "file": {
-                  "path": "/tmp/ProductCatalogService.yaml",
-                  "serializer": "YAML"
-                }
-              }
-            ]
+            }
           }
         ]
       }

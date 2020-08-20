@@ -9,25 +9,9 @@
         "actions": [
           {
             "file": {
-              "path": "/tmp/CartService.json",
+              "path": "/alloc/data/CartService.json",
               "serializer": "JSON"
-            },
-            "then": [
-              {
-                "file": {
-                  "path": "/tmp/CartService.pb",
-                  "serializer": "PB"
-                }
-              }
-            ],
-            "onError": [
-              {
-                "file": {
-                  "path": "/tmp/CartService.yaml",
-                  "serializer": "YAML"
-                }
-              }
-            ]
+            }
           }
         ]
       }

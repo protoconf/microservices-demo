@@ -9,8 +9,6 @@ load(
     "ActionTypeHttp",
 )
 load("/nomad/v0.11.1/api.proto", "RegisterJobRequest")
-load("/nomad/v0.11.1/api.pinc", "NOMAD_PROTO")
-load("../protoconf_exec_task.pinc", "ProtoconfExecTask")
 load("job.pinc", "NewJob")
 
 
@@ -42,12 +40,6 @@ def JobRegistry(
                 Action(
                     http=ActionTypeHttp(uri=cluster_address + "/v1/jobs", method="POST")
                 ),
-                # Action(
-                #     file=ActionTypeWriteToFile(
-                #         path="/local/{}.json".format(job.ID),
-                #         serializer=Config.Serializer.JSON,
-                #     )
-                # ),
             ],
         )
         executor.items.append(e)
@@ -56,13 +48,5 @@ def JobRegistry(
         j = NewJob(*args, **kwargs)
         register_job(j.job)
         return j
-
-    # executor_job = NewJob(executor_name)
-    # executor_job.AddTask(
-    #     ProtoconfExecTask(
-    #         "/".join([config_root, "apply"]), {"nomad/v0.11.1/api.proto": NOMAD_PROTO}
-    #     )
-    # )
-    # register_job(executor_job.job)
 
     return struct(output=output, register_job=register_job, NewJob=newJob)

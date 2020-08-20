@@ -3,11 +3,18 @@ load(
     "//envoy/config/filter/network/http_connection_manager/v2/http_connection_manager.proto",
     "HttpConnectionManager",
 )
+load("//envoy/config/filter/accesslog/v2/accesslog.proto", "AccessLog")
+load("//envoy/config/accesslog/v2/file.proto", "FileAccessLog")
 load("//envoy/api/v2/route.proto", "RouteConfiguration")
 load("//envoy/api/v2/listener.proto", "Listener")
 load("//envoy/api/v2/cluster.proto", "Cluster")
 load("//envoy/api/v2/endpoint.proto", "ClusterLoadAssignment")
-load("//envoy/api/v2/endpoint/endpoint_components.proto", "LocalityLbEndpoints")
+load(
+    "//envoy/api/v2/endpoint/endpoint_components.proto",
+    "LocalityLbEndpoints",
+    "LbEndpoint",
+    "Endpoint",
+)
 load("//envoy/api/v2/listener/listener_components.proto", "FilterChain", "Filter")
 load(
     "//envoy/api/v2/route/route_components.proto",
@@ -26,11 +33,11 @@ def virtual_host_from_service(service):
         name=svc_name,
         domains=[svc_name],
         routes=[
-            Route(
-                name=svc_name,
-                match=RouteMatch(prefix="/"),
-                route=RouteAction(cluster="local_service"),
-            )
+            # Route(
+            #     name=svc_name,
+            #     match=RouteMatch(prefix="/"),
+            #     route=RouteAction(cluster="local_service"),
+            # )
         ],
     )
 
@@ -43,26 +50,32 @@ def connection_manager_for_service(service):
             name=service.name.lower() + "_route",
             virtual_hosts=[virtual_host_from_service(s) for s in service.downstreams],
         ),
+        access_log=[
+            AccessLog(
+                name="envoy.access_loggers.file",
+                typed_config=FileAccessLog(path="/dev/stdout"),
+            )
+        ],
     )
 
 
 def bootstrap_for_service(service):
     bootstrap = Bootstrap(
-        admin=Admin(
-            access_log_path="/dev/stdout",
-            address=Address(
-                socket_address=SocketAddress(address="0.0.0.0", port_value=8881)
-            ),
-        ),
+        # admin=Admin(
+        #     access_log_path="/dev/stdout",
+        #     address=Address(
+        #         socket_address=SocketAddress(address="0.0.0.0", port_value=8881)
+        #     ),
+        # ),
         static_resources=Bootstrap.StaticResources(
             listeners=[
                 Listener(
                     address=Address(
                         socket_address=SocketAddress(
-                            address="0.0.0.0", port_value=10000
+                            address="0.0.0.0", port_value=11000
                         )
                     ),
-                    # name="listener_0",
+                    name="forwarder",
                     filter_chains=[
                         FilterChain(
                             filters=[
@@ -77,17 +90,7 @@ def bootstrap_for_service(service):
                     ],
                 )
             ],
-            clusters=[
-                Cluster(
-                    name="local_service",
-                    connect_timeout=Duration(nanos=25 * 10000000),
-                    type=Cluster.DiscoveryType.STRICT_DNS,
-                    lb_policy=Cluster.LbPolicy.ROUND_ROBIN,
-                    load_assignment=ClusterLoadAssignment(
-                        cluster_name="local_service", endpoints=[LocalityLbEndpoints()],
-                    ),
-                )
-            ],
+            clusters=[],
         ),
     )
     return bootstrap

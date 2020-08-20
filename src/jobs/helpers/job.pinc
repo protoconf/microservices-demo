@@ -1,7 +1,7 @@
 """
 nomad jobs
 """
-load("/nomad/v0.11.1/api.proto", "Job", "TaskGroup")
+load("/nomad/v0.11.1/api.proto", "Job", "TaskGroup", "NetworkResource")
 load("task.pinc", "NewTask")
 
 datacenters = ["dc1"]
@@ -28,7 +28,19 @@ def NewJob(name, dc=datacenters, region="global", type="service", priority=75):
     )
 
     def addTaskGroup(taskGroupName=DEFAULT_GROUP_NAME):
-        local_group = TaskGroup(Name=taskGroupName, Tasks=[], Count=1)
+        local_group = TaskGroup(
+            Name=taskGroupName,
+            Tasks=[],
+            # Networks=[
+            #     NetworkResource(
+            #         Mode="host",
+            #         # CIDR="172.31.1.0/24",
+            #         ReservedPorts=[],
+            #         DynamicPorts=[],
+            #     )
+            # ],
+            Count=1,
+        )
         local_job.TaskGroups.append(local_group)
         return local_group
 

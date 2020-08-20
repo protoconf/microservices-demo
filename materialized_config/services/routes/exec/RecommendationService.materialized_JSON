@@ -9,25 +9,9 @@
         "actions": [
           {
             "file": {
-              "path": "/tmp/RecommendationService.json",
+              "path": "/alloc/data/RecommendationService.json",
               "serializer": "JSON"
-            },
-            "then": [
-              {
-                "file": {
-                  "path": "/tmp/RecommendationService.pb",
-                  "serializer": "PB"
-                }
-              }
-            ],
-            "onError": [
-              {
-                "file": {
-                  "path": "/tmp/RecommendationService.yaml",
-                  "serializer": "YAML"
-                }
-              }
-            ]
+            }
           }
         ]
       }

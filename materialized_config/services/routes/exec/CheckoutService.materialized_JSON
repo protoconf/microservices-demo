@@ -9,25 +9,9 @@
         "actions": [
           {
             "file": {
-              "path": "/tmp/CheckoutService.json",
+              "path": "/alloc/data/CheckoutService.json",
               "serializer": "JSON"
-            },
-            "then": [
-              {
-                "file": {
-                  "path": "/tmp/CheckoutService.pb",
-                  "serializer": "PB"
-                }
-              }
-            ],
-            "onError": [
-              {
-                "file": {
-                  "path": "/tmp/CheckoutService.yaml",
-                  "serializer": "YAML"
-                }
-              }
-            ]
+            }
           }
         ]
       }

@@ -18,25 +18,9 @@ def executor_for_service(svc):
                 actions=[
                     Action(
                         file=ActionTypeWriteToFile(
-                            path="/tmp/{}.json".format(svc.name),
+                            path="/alloc/data/{}.json".format(svc.name),
                             serializer=Config.Serializer.JSON,
                         ),
-                        then=[
-                            Action(
-                                file=ActionTypeWriteToFile(
-                                    path="/tmp/{}.pb".format(svc.name),
-                                    serializer=Config.Serializer.PB,
-                                )
-                            ),
-                        ],
-                        on_error=[
-                            Action(
-                                file=ActionTypeWriteToFile(
-                                    path="/tmp/{}.yaml".format(svc.name),
-                                    serializer=Config.Serializer.YAML,
-                                )
-                            ),
-                        ],
                     ),
                 ],
             )

@@ -9,25 +9,9 @@
         "actions": [
           {
             "file": {
-              "path": "/tmp/CurrencyService.json",
+              "path": "/alloc/data/CurrencyService.json",
               "serializer": "JSON"
-            },
-            "then": [
-              {
-                "file": {
-                  "path": "/tmp/CurrencyService.pb",
-                  "serializer": "PB"
-                }
-              }
-            ],
-            "onError": [
-              {
-                "file": {
-                  "path": "/tmp/CurrencyService.yaml",
-                  "serializer": "YAML"
-                }
-              }
-            ]
+            }
           }
         ]
       }

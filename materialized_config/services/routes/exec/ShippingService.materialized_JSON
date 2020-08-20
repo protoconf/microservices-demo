@@ -9,25 +9,9 @@
         "actions": [
           {
             "file": {
-              "path": "/tmp/ShippingService.json",
+              "path": "/alloc/data/ShippingService.json",
               "serializer": "JSON"
-            },
-            "then": [
-              {
-                "file": {
-                  "path": "/tmp/ShippingService.pb",
-                  "serializer": "PB"
-                }
-              }
-            ],
-            "onError": [
-              {
-                "file": {
-                  "path": "/tmp/ShippingService.yaml",
-                  "serializer": "YAML"
-                }
-              }
-            ]
+            }
           }
         ]
       }
