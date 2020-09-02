@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+// A Tier is a group of servers used for a specific purpose, might be translated
+// into AwsEc2Fleet or GoogleComputeInstanceGroup
+message Tier {
+    // `name` of the tier, will be used by the cluster manager (Kube/Nomad) to
+    // assign jobs to tier special tiers
+    string name = 1;
+
+    // `instance_type` represents the type of instance should be used by the 
+    // provider (e.g t1.small, c5.xlarge)
+    string instance_type = 2;
+
+    // `image` sets the image id to use as the root disk for the instances in
+    // this `Tier`
+    string image = 3;
+
+    // `min_count` set the lower boundry for the number of instances running in
+    // this `Tier`
+    uint32 min_count = 4;
+
+    // `max_count` set the upper boundry for the number of instances running in
+    // this `Tier`
+    uint32 max_count = 5;
+
+    // `count_target` can be used when the provider does not implement an auto
+    // scaling mechanism. In this case, we can implement autoscaling using the
+    // mutation RPC.
+    uint32 count_target = 6;
+}
+
+// 
+message Cluster {
+    // `provider`
+    Providers provider = 1;
+    string region = 2;
+    uint32 cluster_number = 3;
+    uint32 servers_count = 4;
+    repeated Tier tiers = 5;    
+    bool ready = 6;
+    ClusterVersions versions = 7;
+
+    enum Providers {
+        NONE = 0;
+        AWS = 1;
+        GOOGLE = 2;
+        AZURE = 3;
+        ALICLOUD = 4;
+        DIGITALOCEAN = 5;
+        PACKET = 6;
+    }
+}
+
+message ClusterVersions {
+    string consul_version = 1;
+    string vault_version = 2;
+    string nomad_version = 3;
+    string protoconf_version = 4;
+}
+
+// Counters are used to make changes via the mutation api
+message Counters {
+    uint32 global_counter = 1;
+}
