@@ -18,7 +18,8 @@ def version(v):
 ENVOY_TEMPLATE = """\
 static_resources:
   listeners:
-  - address:
+  - name: ingress
+    address:
       socket_address:
         address: 0.0.0.0
         port_value: 10000
@@ -62,7 +63,9 @@ static_resources:
               socket_address:
                 address: "${NOMAD_IP_server_server}"
                 port_value: ${NOMAD_PORT_server_server}
-
+node:
+  cluster: "${NOMAD_DC}"
+  id: "${NOMAD_JOB_NAME}"
 admin:
   access_log_path: "/tmp/admin_access.log"
   address:
@@ -86,33 +89,45 @@ def generate_job_for_service(svc):
     artifact = svc.artifact.name if svc.artifact else svc.name.lower()
 
     for ver in svc.versions:
+        job.SetCount(1, ver.name)
+        task = job.NewTask("server", ver.name)
+        envoy = job.NewTask("envoy", ver.name)
+
         v = version(ver.version)
-        job.SetCount(2, v)
-        task = job.NewTask("server", v)
         task.SetImage("smintz/" + artifact + ":" + v)
         task.NewPort("server", to=18080)
+        task.task.Resources.CPU = 100
         task.task.Resources.MemoryMB = 128
+        task.task.Leader = True
         task.task.Env = {
             "LISTEN_ADDR": "0.0.0.0",
             "PORT": "18080",
+            "test": "hello",
             "http_proxy": "${NOMAD_ADDR_envoy_forwarder}",
         }
-        # for s in svc.downstreams:
-        #     env_name = (
-        #         re.sub("([a-z0-9])([A-Z])", "${1}_${2}", s.name).upper() + "_ADDR"
-        #     )
-        #     task.task.Env[env_name] = "${NOMAD_ADDR_envoy_forwarder}"
-        envoy = job.NewTask("envoy", v)
+        for s in svc.downstreams:
+            env_name = (
+                re.sub("([a-z0-9])([A-Z])", "${1}_${2}", s.name).upper() + "_ADDR"
+            )
+            task.task.Env[env_name] = s.name.lower()
         envoy.SetImage("envoyproxy/envoy:v1.15.0")
         envoy.NewService(
             name + "-envoy", 8881, tags=["envoy-admin"], label="envoyadmin"
         )
-        envoy.NewService(name, 10000, label="ingress")
+        envoy.NewService(name, 10000, label="ingress", tags=[ver.name, v])
         envoy.NewPort("forwarder", 11000)
-        envoy.task.Resources.CPU = 500
+        envoy.task.Resources.CPU = 100
         envoy.SetConfig(
             "args",
-            ["-c /alloc/data/%s.json" % svc.name, "--config-yaml", ENVOY_TEMPLATE],
+            [
+                "-c /alloc/data/%s.json" % svc.name,
+                "--config-yaml",
+                ENVOY_TEMPLATE,
+                # "--service-node",
+                # name,
+                # "--service-cluster",
+                # "${NOMAD_DC}",
+            ],
         )
         exec = ProtoconfExecTask("services/routes/exec/" + svc.name)
         exec.Artifacts = [
@@ -122,7 +137,7 @@ def generate_job_for_service(svc):
                 GetterOptions={"depth": "1"},
             )
         ]
-        job.AddTask(exec, v)
+        job.AddTask(exec, ver.name)
 
     return job
 

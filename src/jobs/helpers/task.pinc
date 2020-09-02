@@ -2,6 +2,7 @@
 Task Helper
 """
 
+load("//configs/local/consul.pinc", "CONSUL_IP_ADDR")
 load("/google/protobuf/struct.proto", "Value", "ListValue", "Struct")
 load(
     "/nomad/v0.11.1/api.proto",
@@ -164,7 +165,7 @@ def NewTask(name, image=None):
     if image:
         setImage(image)
 
-    setConfig("dns_options", ["169.254.1.1"])
+    setConfig("dns_options", [CONSUL_IP_ADDR])
 
     return struct(
         task=local_task,

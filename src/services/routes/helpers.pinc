@@ -1,3 +1,4 @@
+load("//configs/local/consul.pinc", "CONSUL_IP_ADDR")
 load("//envoy/config/bootstrap/v2/bootstrap.proto", "Bootstrap", "Admin")
 load(
     "//envoy/config/filter/network/http_connection_manager/v2/http_connection_manager.proto",
@@ -7,8 +8,10 @@ load("//envoy/config/filter/accesslog/v2/accesslog.proto", "AccessLog")
 load("//envoy/config/accesslog/v2/file.proto", "FileAccessLog")
 load("//envoy/api/v2/route.proto", "RouteConfiguration")
 load("//envoy/api/v2/listener.proto", "Listener")
-load("//envoy/api/v2/cluster.proto", "Cluster")
+load("//envoy/api/v2/cluster.proto", "Cluster", "UpstreamConnectionOptions")
 load("//envoy/api/v2/endpoint.proto", "ClusterLoadAssignment")
+load("//envoy/api/v2/core/config_source.proto", "ConfigSource", "ApiConfigSource")
+load("//envoy/api/v2/core/grpc_service.proto", "GrpcService")
 load(
     "//envoy/api/v2/endpoint/endpoint_components.proto",
     "LocalityLbEndpoints",
@@ -16,6 +19,7 @@ load(
     "Endpoint",
 )
 load("//envoy/api/v2/listener/listener_components.proto", "FilterChain", "Filter")
+load("//envoy/api/v2/core/protocol.proto", "Http2ProtocolOptions")
 load(
     "//envoy/api/v2/route/route_components.proto",
     "VirtualHost",
@@ -23,7 +27,7 @@ load(
     "RouteMatch",
     "RouteAction",
 )
-load("//envoy/api/v2/core/address.proto", "Address", "SocketAddress")
+load("//envoy/api/v2/core/address.proto", "Address", "SocketAddress", "TcpKeepalive")
 load("/google/protobuf/duration.proto", "Duration")
 
 
@@ -36,7 +40,7 @@ def virtual_host_from_service(service):
             # Route(
             #     name=svc_name,
             #     match=RouteMatch(prefix="/"),
-            #     route=RouteAction(cluster="local_service"),
+            #     route=RouteAction(cluster=svc_name),
             # )
         ],
     )
@@ -59,6 +63,14 @@ def connection_manager_for_service(service):
     )
 
 
+api_config_source = ApiConfigSource(
+    api_type=ApiConfigSource.ApiType.GRPC,
+    grpc_services=[
+        GrpcService(envoy_grpc=GrpcService.EnvoyGrpc(cluster_name="xds_cluster"))
+    ],
+)
+
+
 def bootstrap_for_service(service):
     bootstrap = Bootstrap(
         # admin=Admin(
@@ -67,6 +79,11 @@ def bootstrap_for_service(service):
         #         socket_address=SocketAddress(address="0.0.0.0", port_value=8881)
         #     ),
         # ),
+        dynamic_resources=Bootstrap.DynamicResources(
+            # lds_config=ConfigSource(),
+            # cds_config=ConfigSource(),
+            ads_config=api_config_source,
+        ),
         static_resources=Bootstrap.StaticResources(
             listeners=[
                 Listener(
@@ -90,7 +107,44 @@ def bootstrap_for_service(service):
                     ],
                 )
             ],
-            clusters=[],
+            clusters=[
+                Cluster(
+                    name="xds_cluster",
+                    connect_timeout=Duration(nanos=250000000),
+                    type=Cluster.DiscoveryType.STATIC,
+                    lb_policy=Cluster.LbPolicy.ROUND_ROBIN,
+                    http2_protocol_options=Http2ProtocolOptions(),
+                    upstream_connection_options=UpstreamConnectionOptions(
+                        tcp_keepalive=TcpKeepalive()
+                    ),
+                    hosts=[
+                        Address(
+                            socket_address=SocketAddress(
+                                address=CONSUL_IP_ADDR, port_value=8501
+                            )
+                        )
+                    ]
+                    # load_assignment=ClusterLoadAssignment(
+                    #     cluster_name="xds_cluster",
+                    #     endpoints=[
+                    #         LocalityLbEndpoints(
+                    #             lb_endpoints=[
+                    #                 LbEndpoint(
+                    #                     endpoint=Endpoint(
+                    #                         address=Address(
+                    #                             socket_address=SocketAddress(
+                    #                                 address=CONSUL_IP_ADDR,
+                    #                                 port_value=8501,
+                    #                             )
+                    #                         )
+                    #                     )
+                    #                 )
+                    #             ]
+                    #         )
+                    #     ],
+                    # ),
+                )
+            ],
         ),
     )
     return bootstrap

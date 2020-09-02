@@ -12,7 +12,7 @@ message Dashboard {
     bool hide_controls = 7;
     string id = 8;
     // repeated string inputs = 9;
-    // repeated string links = 10;
+    repeated Link links = 10;
     google.protobuf.Duration refresh = 11;
     bool schema_version = 12;
     bool shared_crosshair = 13;
@@ -37,5 +37,29 @@ message Row {
 }
 
 message Annotations {
-    repeated string list = 1;
+    repeated Annotation list = 1;
+}
+
+message Annotation {
+    uint32 build_in = 1;
+    string datasource = 2;
+    bool enable = 3;
+    bool hide = 4;
+    string icon_color = 5; //rgba(0, 211, 255, 1)
+    string name = 6;
+    string type = 7;
+}
+
+message Link {
+    string icon = 1; //might be an enum
+    repeated string tags = 2;
+    string title = 3;
+    string tooltip = 4;
+    Type type = 5;
+    string url = 6;
+
+    enum Type {
+        link = 0;
+        dashboards = 1;
+    }
 }

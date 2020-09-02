@@ -31,7 +31,26 @@
               "patch": 4,
               "prerelease": "31-gc4d8670"
             },
-            "weight": 90
+            "weight": 90,
+            "name": "prod"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 9,
+            "name": "beta"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 1,
+            "name": "alpha"
           }
         ]
       },
@@ -62,7 +81,26 @@
               "patch": 4,
               "prerelease": "31-gc4d8670"
             },
-            "weight": 90
+            "weight": 90,
+            "name": "prod"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 9,
+            "name": "beta"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 1,
+            "name": "alpha"
           }
         ]
       },
@@ -93,7 +131,26 @@
               "patch": 4,
               "prerelease": "31-gc4d8670"
             },
-            "weight": 90
+            "weight": 90,
+            "name": "prod"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 9,
+            "name": "beta"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 1,
+            "name": "alpha"
           }
         ]
       },
@@ -124,7 +181,26 @@
               "patch": 4,
               "prerelease": "31-gc4d8670"
             },
-            "weight": 90
+            "weight": 90,
+            "name": "prod"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 9,
+            "name": "beta"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 1,
+            "name": "alpha"
           }
         ]
       },
@@ -155,7 +231,26 @@
               "patch": 4,
               "prerelease": "31-gc4d8670"
             },
-            "weight": 90
+            "weight": 90,
+            "name": "prod"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 9,
+            "name": "beta"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 1,
+            "name": "alpha"
           }
         ]
       },
@@ -186,7 +281,26 @@
               "patch": 4,
               "prerelease": "31-gc4d8670"
             },
-            "weight": 90
+            "weight": 90,
+            "name": "prod"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 9,
+            "name": "beta"
+          },
+          {
+            "version": {
+              "minor": 1,
+              "patch": 4,
+              "prerelease": "31-gc4d8670"
+            },
+            "weight": 1,
+            "name": "alpha"
           }
         ]
       }
@@ -215,7 +329,27 @@
           "minor": 1,
           "patch": 4,
           "prerelease": "31-gc4d8670"
-        }
+        },
+        "weight": 90,
+        "name": "prod"
+      },
+      {
+        "version": {
+          "minor": 1,
+          "patch": 4,
+          "prerelease": "31-gc4d8670"
+        },
+        "weight": 9,
+        "name": "beta"
+      },
+      {
+        "version": {
+          "minor": 1,
+          "patch": 4,
+          "prerelease": "31-gc4d8670"
+        },
+        "weight": 1,
+        "name": "alpha"
       }
     ]
   }

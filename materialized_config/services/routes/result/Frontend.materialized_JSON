@@ -2,6 +2,18 @@
   "protoFile": "envoy/config/bootstrap/v2/bootstrap.proto",
   "value": {
     "@type": "type.googleapis.com/envoy.config.bootstrap.v2.Bootstrap",
+    "dynamicResources": {
+      "adsConfig": {
+        "apiType": "GRPC",
+        "grpcServices": [
+          {
+            "envoyGrpc": {
+              "clusterName": "xds_cluster"
+            }
+          }
+        ]
+      }
+    },
     "staticResources": {
       "listeners": [
         {
@@ -81,6 +93,25 @@
               ]
             }
           ]
+        }
+      ],
+      "clusters": [
+        {
+          "name": "xds_cluster",
+          "type": "STATIC",
+          "connectTimeout": "0.250s",
+          "hosts": [
+            {
+              "socketAddress": {
+                "address": "172.17.0.2",
+                "portValue": 8501
+              }
+            }
+          ],
+          "http2ProtocolOptions": {},
+          "upstreamConnectionOptions": {
+            "tcpKeepalive": {}
+          }
         }
       ]
     }

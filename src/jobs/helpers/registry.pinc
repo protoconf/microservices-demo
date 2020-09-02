@@ -49,4 +49,9 @@ def JobRegistry(
         register_job(j.job)
         return j
 
-    return struct(output=output, register_job=register_job, NewJob=newJob)
+    return struct(
+        output=output,
+        register_job=register_job,
+        RegisterJob=register_job,
+        NewJob=newJob,
+    )
