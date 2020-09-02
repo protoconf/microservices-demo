@@ -1,3 +1,6 @@
+"""
+envoy helpers
+"""
 load("//configs/local/consul.pinc", "CONSUL_IP_ADDR")
 load("//envoy/config/bootstrap/v2/bootstrap.proto", "Bootstrap", "Admin")
 load(
@@ -29,6 +32,7 @@ load(
 )
 load("//envoy/api/v2/core/address.proto", "Address", "SocketAddress", "TcpKeepalive")
 load("/google/protobuf/duration.proto", "Duration")
+load("//rollout/rollout.pinc", "GradualRollout")
 
 
 def virtual_host_from_service(service):
@@ -47,20 +51,23 @@ def virtual_host_from_service(service):
 
 
 def connection_manager_for_service(service):
-    return HttpConnectionManager(
+    add_access_log = GradualRollout("HELLO_WORLD").for_item(service.name.lower())
+    value = HttpConnectionManager(
         codec_type=HttpConnectionManager.CodecType.AUTO,
         stat_prefix=service.name.lower(),
         route_config=RouteConfiguration(
             name=service.name.lower() + "_route",
             virtual_hosts=[virtual_host_from_service(s) for s in service.downstreams],
         ),
-        access_log=[
+    )
+    if add_access_log:
+        value.access_log = [
             AccessLog(
                 name="envoy.access_loggers.file",
                 typed_config=FileAccessLog(path="/dev/stdout"),
             )
-        ],
-    )
+        ]
+    return value
 
 
 api_config_source = ApiConfigSource(

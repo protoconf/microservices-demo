@@ -1,0 +1,18 @@
+{
+  "protoFile": "rollout/rollout.proto",
+  "value": {
+    "@type": "type.googleapis.com/RolloutConfigRegistry",
+    "configs": {
+      "HELLO_WORLD": {
+        "name": "HELLO_WORLD",
+        "includeRegexes": [
+          "front.*"
+        ],
+        "excludeRegexes": [
+          "ad.*"
+        ],
+        "percentage": 0.5
+      }
+    }
+  }
+}

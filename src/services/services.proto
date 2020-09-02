@@ -25,28 +25,28 @@ message Service {
     ServiceType type = 3;
 
     // `owner` of the service, one of `User` or `Group`.
-    ownership.Owner owner = 3;
+    ownership.Owner owner = 4;
 
     // `slos` for the service to create dashboards and alerts for.
-    repeated SLO slos = 4;
+    repeated SLO slos = 5;
 
     // `downstreams` are other services required by this service, can be used 
     // for generating dashboards, whitelisting access etc.
-    repeated Service downstreams = 5;
+    repeated Service downstreams = 6;
 
     // `external_downstreams` are third party APIs this service is using.
-    repeated ExternalService external_downstreams = 6;
+    repeated ExternalService external_downstreams = 7;
 
     // `artifact` is the reference for the main artifact to be run for this
     // service. mainly used for Kubernetes to know which docker image to run.
-    Artifact artifact = 7;
+    Artifact artifact = 8;
 
     // `versions` is used to define multiple versions of the service artifact to
     // run. This can be used by Kubernetes to start multiple ReplicaSets with the
     // approproate number of replicas based on `weight` and for Envoy to generate
     // weighted clusters upstreams for checking new versions. Dashboards can use
     // this to show performance difference between versions.
-    repeated WeightedVersion versions = 8;
+    repeated WeightedVersion versions = 9;
 
     // `WeightedVersion` is the definition for `versions`
     message WeightedVersion {
@@ -71,8 +71,8 @@ message Service {
             oneof target {
                 float above = 2;
                 float below = 3;
-                repeated float between = 4;
-                repeated float outside = 5;
+                // repeated float between = 4;
+                // repeated float outside = 5;
             }
         }
 

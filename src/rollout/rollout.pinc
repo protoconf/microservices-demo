@@ -1,0 +1,36 @@
+"""
+rollout.pinc
+"""
+load("mutable:rollout", default_registry="value")
+load("re.star", "re")
+load("hash.star", "hash")
+
+
+def GradualRollout(exp_name, registry=default_registry):
+    exp = registry.configs.get(exp_name, None)
+
+    def match(item, re_list):
+        for pattern in re_list:
+            result = re.findall("^" + pattern + "$", item)
+            if len(result) > 0:
+                return True
+        return False
+
+    def for_item(item_name, default=False):
+        if not exp:
+            return default
+
+        if match(item_name, exp.exclude_regexes):
+            return False
+
+        if match(item_name, exp.include_regexes):
+            return True
+
+        # calculate percentage for item_name
+        d = int(hash.md5(item_name)[:8], 16) % 100
+        if d < exp.percentage * 100:
+            return True
+
+        return default
+
+    return struct(for_item=for_item)
