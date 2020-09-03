@@ -31,6 +31,15 @@
                   "name": "envoy.filters.network.http_connection_manager",
                   "typedConfig": {
                     "@type": "type.googleapis.com/envoy.config.filter.network.http_connection_manager.v2.HttpConnectionManager",
+                    "accessLog": [
+                      {
+                        "name": "envoy.access_loggers.file",
+                        "typedConfig": {
+                          "@type": "type.googleapis.com/envoy.config.accesslog.v2.FileAccessLog",
+                          "path": "/dev/stdout"
+                        }
+                      }
+                    ],
                     "routeConfig": {
                       "name": "checkoutservice_route",
                       "virtualHosts": [

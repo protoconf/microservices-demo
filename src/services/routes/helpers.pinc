@@ -33,6 +33,7 @@ load(
 load("//envoy/api/v2/core/address.proto", "Address", "SocketAddress", "TcpKeepalive")
 load("/google/protobuf/duration.proto", "Duration")
 load("//rollout/rollout.pinc", "GradualRollout")
+load("//rollout/rollout_demo.pinc", "demo_registry")
 
 
 def virtual_host_from_service(service):
@@ -51,7 +52,9 @@ def virtual_host_from_service(service):
 
 
 def connection_manager_for_service(service):
-    add_access_log = GradualRollout("HELLO_WORLD").for_item(service.name.lower())
+    add_access_log = GradualRollout("HELLO_WORLD", demo_registry).for_item(
+        service.name.lower()
+    )
     value = HttpConnectionManager(
         codec_type=HttpConnectionManager.CodecType.AUTO,
         stat_prefix=service.name.lower(),

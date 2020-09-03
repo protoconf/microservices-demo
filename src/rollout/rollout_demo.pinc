@@ -1,0 +1,16 @@
+"""
+rollout test
+"""
+load("rollout.proto", "RolloutConfig", "RolloutConfigRegistry")
+
+
+demo_registry = RolloutConfigRegistry(
+    configs={
+        "HELLO_WORLD": RolloutConfig(
+            name="HELLO_WORLD",
+            include_regexes=["front.*"],
+            exclude_regexes=["ad.*"],
+            percentage=0.5,
+        )
+    }
+)
